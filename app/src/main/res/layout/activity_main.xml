@@ -12,7 +12,7 @@
     tools:context="co.minesweepers.birthday.activities.MainActivity">
 
     <TextView
-        android:id="@+id/view"
+        android:id="@+id/button_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -24,7 +24,7 @@
         android:text="@string/view" />
 
     <TextView
-        android:id="@+id/create"
+        android:id="@+id/button_create"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

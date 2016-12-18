@@ -21,6 +21,7 @@
         <activity android:name=".activities.ViewMemoryActivity" />
         <activity android:name=".activities.AddPersonActivity" />
         <activity android:name=".activities.AddQuestionActivity" />
+        <activity android:name=".activities.CreateCustomCredentialsActivity" />
     </application>
 
 </manifest>

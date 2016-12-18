@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mTextViewCreate = (TextView) findViewById(R.id.create);
+        mTextViewCreate = (TextView) findViewById(R.id.button_create);
         mTextViewCreate.setOnClickListener(this);
-        mTextViewView = (TextView) findViewById(R.id.view);
+        mTextViewView = (TextView) findViewById(R.id.button_view);
         mTextViewView.setOnClickListener(this);
     }
 
@@ -27,11 +27,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.create:
+            case R.id.button_create:
                 Intent createMemoryIntent = new Intent(this, CreateMemoryActivity.class);
                 startActivity(createMemoryIntent);
                 break;
-            case R.id.view:
+            case R.id.button_view:
                 Intent viewMemoryIntent = new Intent(this, ViewMemoryActivity.class);
                 startActivity(viewMemoryIntent);
                 break;

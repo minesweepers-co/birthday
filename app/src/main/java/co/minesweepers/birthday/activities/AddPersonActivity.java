@@ -17,9 +17,9 @@ public class AddPersonActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_person);
-        mButtonAddQuestion = (Button) findViewById(R.id.add_question);
+        mButtonAddQuestion = (Button) findViewById(R.id.button_add_question);
         mButtonAddQuestion.setOnClickListener(this);
-        mButtonAddVideo = (Button) findViewById(R.id.add_video);
+        mButtonAddVideo = (Button) findViewById(R.id.button_add_video);
         mButtonAddVideo.setOnClickListener(this);
     }
 
@@ -27,11 +27,11 @@ public class AddPersonActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.add_question:
+            case R.id.button_add_question:
                 Intent addQuestionIntent = new Intent(this, AddQuestionActivity.class);
                 startActivity(addQuestionIntent);
                 break;
-            case R.id.add_video:
+            case R.id.button_add_video:
                 break;
         }
     }
