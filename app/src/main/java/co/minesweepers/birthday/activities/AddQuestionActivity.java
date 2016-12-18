@@ -1,6 +1,8 @@
 package co.minesweepers.birthday.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -26,9 +28,12 @@ public class AddQuestionActivity extends AppCompatActivity implements View.OnCli
     private EditText mEditTextQuestion;
     private RadioGroup mRadioGroup;
     private List<RadioButton> mRadioButtonsList;
+    private Uri audioPath;
     private Button mButtonAddOption;
+    private Button mButtonAddAudio;
     private Button mButtonDone;
     private String mPersonId;
+    private static final int PICK_AUDIO_REQUEST = 234;
 
     private int optionsAdded;
 
@@ -42,6 +47,8 @@ public class AddQuestionActivity extends AppCompatActivity implements View.OnCli
         mButtonAddOption.setOnClickListener(this);
         mButtonDone = (Button) findViewById(R.id.button_done);
         mButtonDone.setOnClickListener(this);
+        mButtonAddAudio = (Button) findViewById(R.id.button_add_audio);
+        mButtonAddAudio.setOnClickListener(this);
         mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
         RadioButton radioButtonOption1 = (RadioButton) findViewById(R.id.radio_option1);
         RadioButton radioButtonOption2 = (RadioButton) findViewById(R.id.radio_option2);
@@ -72,6 +79,25 @@ public class AddQuestionActivity extends AppCompatActivity implements View.OnCli
                     finish();
                 }
                 break;
+            case R.id.button_add_audio:
+                showFileChooser();
+                break;
+        }
+    }
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        // keep image for now for easy debugging
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Audio"), PICK_AUDIO_REQUEST);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_AUDIO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            audioPath = data.getData();
         }
     }
 
@@ -85,6 +111,7 @@ public class AddQuestionActivity extends AppCompatActivity implements View.OnCli
                 .setOption3(mRadioButtonsList.get(2).getText().toString())
                 .setOption4(mRadioButtonsList.get(3).getText().toString())
                 .setCorrectOption(getCorrectOption())
+                .setAudio(audioPath)
                 .question();
 
         person.addQuestion(question);
