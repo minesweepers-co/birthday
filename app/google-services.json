@@ -49,50 +49,6 @@
           "status": 2
         }
       }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:881796448302:android:2fde8335901a1ac6",
-        "android_client_info": {
-          "package_name": "com.minesweepers.birthday"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "881796448302-bfa859nlb61mvah1ef4dg7oiiaifr5v5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.minesweepers.birthday",
-            "certificate_hash": "FAEE6357829906283C073D653F92AE5A98FD2113"
-          }
-        },
-        {
-          "client_id": "881796448302-o0kvvb1kg8id6esnivmuno1gk8qjjk17.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAFXY1uPFnXJXuN1zkbtD99UMx0HRjNOhI"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "881796448302-o0kvvb1kg8id6esnivmuno1gk8qjjk17.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
     }
   ],
   "configuration_version": "1"
