@@ -12,6 +12,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.FileNotFoundException;
 import java.util.UUID;
 
+import co.minesweepers.birthday.model.Memory;
+
 public class DataUploaderService {
 
     public interface ResponseHandler {
@@ -25,7 +27,7 @@ public class DataUploaderService {
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         final String randomisedFilename = UUID.randomUUID().toString() + uri.getLastPathSegment();
-        final String objectPath = MemoryIdProvider.getId() + "/" + randomisedFilename;
+        final String objectPath = Memory.getInstance().getId() + "/" + randomisedFilename;
         StorageReference objectRef = storageRef.child(objectPath);
 
 
