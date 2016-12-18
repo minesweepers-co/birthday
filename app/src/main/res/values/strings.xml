@@ -2,4 +2,7 @@
     <string name="app_name">Birthday</string>
     <string name="view">View</string>
     <string name="create">Create</string>
+    <string name="add_person">Add Person</string>
+    <string name="add_question">Add Question</string>
+    <string name="add_video">Add Video</string>
 </resources>

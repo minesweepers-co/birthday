@@ -1,10 +1,12 @@
-package co.minesweepers.birthday;
+package co.minesweepers.birthday.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import co.minesweepers.birthday.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
