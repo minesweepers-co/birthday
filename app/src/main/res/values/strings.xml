@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Birthday</string>
+    <string name="view">View</string>
+    <string name="create">Create</string>
 </resources>
