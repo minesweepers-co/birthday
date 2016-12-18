@@ -1,5 +1,7 @@
 package co.minesweepers.birthday.model;
 
+import android.support.annotation.NonNull;
+
 public class Question {
     private String question;
     private String option1;
@@ -15,17 +17,17 @@ public class Question {
             mQuestionObject = new Question();
         }
 
-        public Builder setQuestion(String question) {
+        public Builder setQuestion(@NonNull String question) {
             mQuestionObject.question = question;
             return this;
         }
 
-        public Builder setOption1(String option1) {
+        public Builder setOption1(@NonNull String option1) {
             mQuestionObject.option1 = option1;
             return this;
         }
 
-        public Builder setOption2(String option2) {
+        public Builder setOption2(@NonNull String option2) {
             mQuestionObject.option2 = option2;
             return this;
         }

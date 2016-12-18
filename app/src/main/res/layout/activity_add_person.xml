@@ -11,6 +11,12 @@
     tools:context="co.minesweepers.birthday.activities.AddPersonActivity"
     android:orientation="vertical">
 
+    <EditText
+        android:id="@+id/edit_text_name"
+        android:hint="@string/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/button_add_question"
         android:text="@string/add_question"
@@ -22,5 +28,12 @@
         android:text="@string/add_video"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/button_done"
+        android:text="@string/done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 
 </LinearLayout>
