@@ -10,21 +10,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import co.minesweepers.birthday.Constants;
-
 public class Person {
 
-    private final String id;
+    private static final String KEY_PERSON_ID = "id";
+    private static final String KEY_PERSON_NAME = "name";
+    private static final String KEY_QUESTIONS = "questions";
+
+    private final String mId;
     private String mName;
     private List<Question> mQuestions;
 
     public Person() {
-        id = UUID.randomUUID().toString();
+        this(UUID.randomUUID().toString());
+    }
+
+    private Person(String id) {
+        mId = id;
         mQuestions = new ArrayList<>();
     }
 
     public String getId() {
-        return id;
+        return mId;
     }
 
     public void setName(@NonNull String name) {
@@ -38,17 +44,29 @@ public class Person {
     public JSONObject serialize() {
         JSONObject personObj = new JSONObject();
         try {
-            personObj.put(Constants.JSON_PERSON_NAME_KEY, mName);
+            personObj.put(KEY_PERSON_ID, mId);
+            personObj.put(KEY_PERSON_NAME, mName);
             JSONArray questions = new JSONArray();
             for (Question question : mQuestions) {
                 questions.put(question.serialize());
             }
-            personObj.put(Constants.JSON_QUESTIONS_ARRAY_KEY, questions);
+            personObj.put(KEY_QUESTIONS, questions);
         } catch (JSONException e) {
             // ignore for now
         }
         return personObj;
     }
 
-
+    static @NonNull Person fromJsonObject(JSONObject jsonObject) throws JSONException {
+        String personId = jsonObject.getString(KEY_PERSON_ID);
+        Person person = new Person(personId);
+        person.setName(jsonObject.getString(KEY_PERSON_NAME));
+        JSONArray questionsArray = jsonObject.getJSONArray(KEY_QUESTIONS);
+        for (int i = 0; i < questionsArray.length(); i++) {
+            JSONObject questionJson = questionsArray.getJSONObject(i);
+            Question question = Question.fromJsonObject(questionJson);
+            person.addQuestion(question);
+        }
+        return person;
+    }
 }
