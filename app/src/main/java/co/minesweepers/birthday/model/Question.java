@@ -6,10 +6,17 @@ import android.support.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.services.DataUploaderService;
 
 public class Question {
+    private static final String KEY_QUESTION = "question";
+    private static final String KEY_OPTION1 = "option1";
+    private static final String KEY_OPTION2 = "option2";
+    private static final String KEY_OPTION3 = "option3";
+    private static final String KEY_OPTION4 = "option4";
+    private static final String KEY_CORRECT_OPTION = "correctOption";
+    private static final String KEY_AUDIO_PATH = "audioPath";
+
     private String question;
     private String option1;
     private String option2;
@@ -18,7 +25,7 @@ public class Question {
     private int correctOption;
     private String audioUri;
 
-    public void addAudio(Uri uri) {
+    private void addAudio(Uri uri) {
         DataUploaderService.uploadData(uri, new DataUploaderService.ResponseHandler() {
             @Override
             public void onSuccess(String objectPath) {
@@ -37,21 +44,39 @@ public class Question {
         });
     }
 
-    public JSONObject serialize() {
+    JSONObject serialize() {
         JSONObject questionObj = new JSONObject();
         try {
             // TODO : don't send stuff if its null
-            questionObj.put(Constants.JSON_QUESTION_KEY, question);
-            questionObj.put(Constants.JSON_OPTION_1_KEY, option1);
-            questionObj.put(Constants.JSON_OPTION_2_KEY, option2);
-            questionObj.put(Constants.JSON_OPTION_3_KEY, option3);
-            questionObj.put(Constants.JSON_OPTION_4_KEY, option4);
-            questionObj.put(Constants.JSON_CORRECT_OPTION_KEY, correctOption);
-            questionObj.put(Constants.JSON_AUDIO_PATH_KEY, audioUri);
+            questionObj.put(KEY_QUESTION, question);
+            questionObj.put(KEY_OPTION1, option1);
+            questionObj.put(KEY_OPTION2, option2);
+            questionObj.put(KEY_OPTION3, option3);
+            questionObj.put(KEY_OPTION4, option4);
+            questionObj.put(KEY_CORRECT_OPTION, correctOption);
+            questionObj.put(KEY_AUDIO_PATH, audioUri);
         } catch (JSONException e) {
             // ignore for now
         }
         return questionObj;
+    }
+
+    static @NonNull Question fromJsonObject(JSONObject questionJson) throws JSONException {
+        Builder builder = new Builder()
+                .setQuestion(questionJson.getString(KEY_QUESTION))
+                .setOption1(questionJson.getString(KEY_OPTION1))
+                .setOption2(questionJson.getString(KEY_OPTION2));
+
+        if (questionJson.has(KEY_OPTION3)) {
+            builder.setOption3(questionJson.getString(KEY_OPTION3));
+        }
+
+        if (questionJson.has(KEY_OPTION4)) {
+            builder.setOption3(questionJson.getString(KEY_OPTION4));
+        }
+
+        builder.setCorrectOption(questionJson.getInt(KEY_CORRECT_OPTION));
+        return builder.question();
     }
 
     public static class Builder {
