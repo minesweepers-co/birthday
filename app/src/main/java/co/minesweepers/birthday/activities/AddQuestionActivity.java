@@ -84,6 +84,7 @@ public class AddQuestionActivity extends AppCompatActivity implements View.OnCli
                 break;
         }
     }
+
     private void showFileChooser() {
         Intent intent = new Intent();
         // keep image for now for easy debugging
