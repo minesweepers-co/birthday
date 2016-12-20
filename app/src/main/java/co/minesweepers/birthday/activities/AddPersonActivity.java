@@ -1,6 +1,7 @@
 package co.minesweepers.birthday.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,8 @@ public class AddPersonActivity extends AppCompatActivity implements View.OnClick
     private Button mButtonDone;
     private EditText mEditTextName;
     private Person mPerson;
+    private Uri videoPath;
+    private static final int PICK_VIDEO_REQUEST = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,9 @@ public class AddPersonActivity extends AppCompatActivity implements View.OnClick
                 addQuestionIntent.putExtra(Constants.INTENT_EXTRA_KEY_PERSON_ID, mPerson.getId());
                 startActivity(addQuestionIntent);
                 break;
+            case R.id.button_add_video:
+                showFileChooser();
+                break;
             case R.id.button_done:
                 boolean personAdded = addPersonToMemory();
                 if (personAdded) {
@@ -53,9 +59,26 @@ public class AddPersonActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO_REQUEST);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            videoPath = data.getData();
+        }
+    }
+
     private boolean addPersonToMemory() {
         // TODO: validate name and at least one question or video present
         mPerson.setName(mEditTextName.getText().toString());
+        mPerson.addVideo(videoPath);
         Memory.getInstance().addPerson(mPerson);
         return true;
     }
