@@ -2,6 +2,7 @@ package co.minesweepers.birthday.model;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +16,7 @@ import co.minesweepers.birthday.services.DataUploaderService;
 
 public class Person {
 
+    private static final String TAG = "Person";
     private static final String KEY_PERSON_ID = "id";
     private static final String KEY_PERSON_NAME = "name";
     private static final String KEY_VIDEO = "videoPath";
@@ -65,7 +67,7 @@ public class Person {
         });
     }
 
-    public JSONObject serialize() {
+    JSONObject serialize() {
         JSONObject personObj = new JSONObject();
         try {
             personObj.put(KEY_PERSON_ID, mId);
@@ -77,7 +79,7 @@ public class Person {
             }
             personObj.put(KEY_QUESTIONS, questions);
         } catch (JSONException e) {
-            // ignore for now
+            Log.e(TAG, "JSON ERROR : " + e.getLocalizedMessage());
         }
         return personObj;
     }

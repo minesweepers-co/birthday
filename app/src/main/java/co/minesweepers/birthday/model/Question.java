@@ -2,6 +2,7 @@ package co.minesweepers.birthday.model;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +10,7 @@ import org.json.JSONObject;
 import co.minesweepers.birthday.services.DataUploaderService;
 
 public class Question {
+    private static final String TAG = "Question";
     private static final String KEY_QUESTION = "question";
     private static final String KEY_OPTION1 = "option1";
     private static final String KEY_OPTION2 = "option2";
@@ -56,7 +58,7 @@ public class Question {
             questionObj.put(KEY_CORRECT_OPTION, correctOption);
             questionObj.put(KEY_AUDIO_PATH, audioUri);
         } catch (JSONException e) {
-            // ignore for now
+            Log.e(TAG, "JSON ERROR : " + e.getLocalizedMessage());
         }
         return questionObj;
     }

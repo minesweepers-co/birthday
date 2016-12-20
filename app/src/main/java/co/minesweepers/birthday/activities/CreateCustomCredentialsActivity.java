@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import co.minesweepers.birthday.R;
+import co.minesweepers.birthday.model.Memory;
 
 public class CreateCustomCredentialsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -16,6 +17,7 @@ public class CreateCustomCredentialsActivity extends AppCompatActivity implement
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_custom_credentials);
         mButtonDoMagic = (Button) findViewById(R.id.button_do_magic);
+        mButtonDoMagic.setOnClickListener(this);
     }
 
     @Override
@@ -23,6 +25,7 @@ public class CreateCustomCredentialsActivity extends AppCompatActivity implement
         int id = v.getId();
         switch (id) {
             case R.id.button_do_magic:
+                Memory.getInstance().upload();
                 break;
         }
     }

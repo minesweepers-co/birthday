@@ -78,7 +78,9 @@ public class AddPersonActivity extends AppCompatActivity implements View.OnClick
     private boolean addPersonToMemory() {
         // TODO: validate name and at least one question or video present
         mPerson.setName(mEditTextName.getText().toString());
-        mPerson.addVideo(videoPath);
+        if (videoPath != null) {
+            mPerson.addVideo(videoPath);
+        }
         Memory.getInstance().addPerson(mPerson);
         return true;
     }
