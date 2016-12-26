@@ -28,7 +28,7 @@ public class ViewMemoryActivity extends AppCompatActivity {
             Memory memory = Memory.fromJson(DUMMY_JSON);
             Log.d(TAG, "Memory " + memory.getId() + " successfully created from JSON");
         } catch (JSONException e) {
-            Log.d(TAG, "JSON ERROR: " + e.getLocalizedMessage());
+            Log.e(TAG, "JSON ERROR: " + e.getLocalizedMessage());
         }
     }
 }

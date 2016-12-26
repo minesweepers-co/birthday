@@ -1,6 +1,10 @@
 package co.minesweepers.birthday.model;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,7 +15,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import co.minesweepers.birthday.services.DataUploaderService;
+
 public class Memory {
+    private static final String TAG = "Memory";
     private final String mId;
     private static Memory sInstance;
     private Map<String, Person> mPersons;
@@ -49,6 +56,24 @@ public class Memory {
         return mId;
     }
 
+    private JSONObject serialize() {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put(KEY_MEMORY_ID, mId);
+            JSONArray personArray = new JSONArray();
+            for (String personId : mPersons.keySet()) {
+                Person person = getPerson(personId);
+                personArray.put(person.serialize());
+            }
+            jsonObject.put(KEY_PEOPLE, personArray);
+        } catch (JSONException e) {
+            Log.e(TAG, "JSON ERROR: " + e.getLocalizedMessage());
+        }
+
+        return jsonObject;
+    }
+
     public static @NonNull Memory fromJson(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
         String memoryId = jsonObject.getString(KEY_MEMORY_ID);
@@ -61,5 +86,19 @@ public class Memory {
         }
 
         return memory;
+    }
+
+    public void upload() {
+        final String json = serialize().toString();
+        DataUploaderService.uploadJson(json, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    Log.d(TAG, "JSON Object uploaded for message id " + Memory.getInstance().getId());
+                } else {
+                    Log.e(TAG, "ERROR while uploading json" + json);
+                }
+            }
+        });
     }
 }

@@ -105,17 +105,19 @@ public class AddQuestionActivity extends AppCompatActivity implements View.OnCli
     private boolean addQuestionToPerson() {
         //TODO: Validate question and at least 2 options present
         Person person = Memory.getInstance().getPerson(mPersonId);
-        Question question = new Question.Builder()
+        Question.Builder builder = new Question.Builder()
                 .setQuestion(mEditTextQuestion.getText().toString())
                 .setOption1(mRadioButtonsList.get(0).getText().toString())
                 .setOption2(mRadioButtonsList.get(1).getText().toString())
                 .setOption3(mRadioButtonsList.get(2).getText().toString())
                 .setOption4(mRadioButtonsList.get(3).getText().toString())
-                .setCorrectOption(getCorrectOption())
-                .setAudio(audioPath)
-                .question();
+                .setCorrectOption(getCorrectOption());
 
-        person.addQuestion(question);
+        if (audioPath != null) {
+            builder.setAudio(audioPath);
+        }
+
+        person.addQuestion(builder.question());
         return true;
     }
 
