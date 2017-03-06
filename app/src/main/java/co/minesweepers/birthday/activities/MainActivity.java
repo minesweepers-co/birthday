@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = v.getId();
         switch (id) {
             case R.id.button_create:
-                Intent createMemoryIntent = new Intent(this, CreateMemoryActivity.class);
+                Intent createMemoryIntent = new Intent(this, AddPeopleActivity.class);
                 startActivity(createMemoryIntent);
                 break;
             case R.id.button_view:
