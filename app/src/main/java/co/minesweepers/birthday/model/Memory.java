@@ -10,8 +10,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,11 +30,14 @@ public class Memory {
 
     private Memory() {
         mId = UUID.randomUUID().toString();
+        // When creating a new memory the ordering will be decided by the user so we use
+        // a HashMap and define the order based on user preference
         mPersons = new HashMap<>();
     }
 
     private Memory(String id) {
         mId = id;
+        // When creating a memory from JSON the ordering is important so we use a LinkedHashMap
         mPersons = new LinkedHashMap<>();
     }
 
@@ -50,6 +55,10 @@ public class Memory {
 
     public Person getPerson(@NonNull String id) {
         return mPersons.get(id);
+    }
+
+    public @NonNull List<Person> getAllPeople() {
+        return new ArrayList<>(mPersons.values());
     }
 
     public String getId() {

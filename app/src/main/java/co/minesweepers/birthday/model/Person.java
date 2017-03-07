@@ -44,6 +44,10 @@ public class Person {
         mName = name;
     }
 
+    public String getName() {
+        return mName;
+    }
+
     public void addQuestion(@NonNull Question question) {
         mQuestions.add(question);
     }
