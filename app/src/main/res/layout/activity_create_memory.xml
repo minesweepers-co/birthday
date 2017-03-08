@@ -8,32 +8,15 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/background"
     tools:context="co.minesweepers.birthday.activities.CreateMemoryActivity"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_text_name"
-        android:hint="@string/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/button_add_question"
-        android:text="@string/add_question"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/button_add_video"
-        android:text="@string/add_video"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/button_done"
-        android:text="@string/done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/create_memory_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:scrollbars="vertical" />
 
 </LinearLayout>
