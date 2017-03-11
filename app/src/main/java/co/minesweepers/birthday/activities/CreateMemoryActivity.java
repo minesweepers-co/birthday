@@ -4,23 +4,24 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
+import co.minesweepers.birthday.adapters.CreateMemoryAdapter;
 import co.minesweepers.birthday.model.Memory;
 import co.minesweepers.birthday.model.Person;
 
-public class CreateMemoryActivity extends AppCompatActivity implements View.OnClickListener {
+public class CreateMemoryActivity extends AppCompatActivity implements CreateMemoryAdapter.Listener {
 
-    private Button mButtonAddQuestion;
-    private Button mButtonAddVideo;
-    private Button mButtonDone;
-    private EditText mEditTextName;
     private Person mPerson;
     private Uri videoPath;
+    private RecyclerView mRecyclerView;
+    private CreateMemoryAdapter mAdapter;
     private static final int PICK_VIDEO_REQUEST = 123;
 
     @Override
@@ -28,38 +29,13 @@ public class CreateMemoryActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_memory);
 
-        mButtonAddQuestion = (Button) findViewById(R.id.button_add_question);
-        mButtonAddQuestion.setOnClickListener(this);
-        mButtonAddVideo = (Button) findViewById(R.id.button_add_video);
-        mButtonAddVideo.setOnClickListener(this);
-        mButtonDone = (Button) findViewById(R.id.button_done);
-        mButtonDone.setOnClickListener(this);
-        mEditTextName = (EditText) findViewById(R.id.edit_text_name);
+        mRecyclerView = (RecyclerView) findViewById(R.id.create_memory_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new CreateMemoryAdapter(this);
+        mRecyclerView.setAdapter(mAdapter);
 
         String personId = getIntent().getStringExtra(Constants.INTENT_EXTRA_KEY_PERSON_ID);
         mPerson = Memory.getInstance().getPerson(personId);
-        mEditTextName.setText(mPerson.getName());
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.button_add_question:
-                Intent addQuestionIntent = new Intent(this, AddQuestionActivity.class);
-                addQuestionIntent.putExtra(Constants.INTENT_EXTRA_KEY_PERSON_ID, mPerson.getId());
-                startActivity(addQuestionIntent);
-                break;
-            case R.id.button_add_video:
-                showFileChooser();
-                break;
-            case R.id.button_done:
-                boolean personAdded = addPersonToMemory();
-                if (personAdded) {
-                    finish();
-                }
-                break;
-        }
     }
 
     private void showFileChooser() {
@@ -77,14 +53,21 @@ public class CreateMemoryActivity extends AppCompatActivity implements View.OnCl
             videoPath = data.getData();
         }
     }
+    
+    @Override
+    public void addQuestion() {
+        Intent addQuestionIntent = new Intent(this, AddQuestionActivity.class);
+        addQuestionIntent.putExtra(Constants.INTENT_EXTRA_KEY_PERSON_ID, mPerson.getId());
+        startActivity(addQuestionIntent);
+    }
 
-    private boolean addPersonToMemory() {
-        // TODO: validate name and at least one question or video present
-        mPerson.setName(mEditTextName.getText().toString());
-        if (videoPath != null) {
-            mPerson.addVideo(videoPath);
-        }
-        Memory.getInstance().addPerson(mPerson);
-        return true;
+    @Override
+    public void addVideo() {
+        showFileChooser();
+    }
+
+    @Override
+    public void addAudio() {
+
     }
 }
