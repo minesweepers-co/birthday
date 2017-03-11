@@ -6,11 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.util.List;
+
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.adapters.CreateMemoryAdapter;
 import co.minesweepers.birthday.model.Memory;
 import co.minesweepers.birthday.model.Person;
+import co.minesweepers.birthday.model.Question;
 
 public class CreateMemoryActivity extends AppCompatActivity implements CreateMemoryAdapter.Listener {
 
@@ -64,13 +67,6 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
     }
     
     @Override
-    public void addQuestion() {
-        Intent addQuestionIntent = new Intent(this, AddQuestionActivity.class);
-        addQuestionIntent.putExtra(Constants.INTENT_EXTRA_KEY_PERSON_ID, mPerson.getId());
-        startActivity(addQuestionIntent);
-    }
-
-    @Override
     public void addVideo() {
         showVideoFileChooser();
     }
@@ -78,5 +74,10 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
     @Override
     public void addAudio() {
         showAudioFileChooser();
+    }
+
+    @Override
+    public void save(List<Question> questions) {
+
     }
 }

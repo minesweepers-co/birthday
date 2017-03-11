@@ -1,13 +1,18 @@
 package co.minesweepers.birthday.model;
 
 import android.net.Uri;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.annotation.Retention;
+
 import co.minesweepers.birthday.services.DataUploaderService;
+
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class Question {
     private static final String TAG = "Question";
@@ -24,8 +29,32 @@ public class Question {
     private String option2;
     private String option3;
     private String option4;
-    private int correctOption;
+    private @QuestionOption int correctOption;
     private String audioUri;
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public String getOption1() {
+        return option1;
+    }
+
+    public String getOption2() {
+        return option2;
+    }
+
+    public String getOption3() {
+        return option3;
+    }
+
+    public String getOption4() {
+        return option4;
+    }
+
+    public @QuestionOption int getCorrectOption() {
+        return correctOption;
+    }
 
     private void addAudio(Uri uri) {
         DataUploaderService.uploadData(uri, new DataUploaderService.ResponseHandler() {
@@ -77,8 +106,23 @@ public class Question {
             builder.setOption3(questionJson.getString(KEY_OPTION4));
         }
 
-        builder.setCorrectOption(questionJson.getInt(KEY_CORRECT_OPTION));
+        builder.setCorrectOption(getCorrectOption(questionJson.getInt(KEY_CORRECT_OPTION)));
         return builder.question();
+    }
+
+    private static @QuestionOption int getCorrectOption(int option) {
+        switch (option) {
+            case QUESTION_OPTION_1:
+                return QUESTION_OPTION_1;
+            case QUESTION_OPTION_2:
+                return QUESTION_OPTION_2;
+            case QUESTION_OPTION_3:
+                return QUESTION_OPTION_3;
+            case QUESTION_OPTION_4:
+                return QUESTION_OPTION_4;
+            default:
+                throw new IllegalStateException("Invalid correct option in JSON");
+        }
     }
 
     public static class Builder {
@@ -113,7 +157,7 @@ public class Question {
             return this;
         }
 
-        public Builder setCorrectOption(int correctOption) {
+        public Builder setCorrectOption(@QuestionOption int correctOption) {
             mQuestionObject.correctOption = correctOption;
             return this;
         }
@@ -127,4 +171,12 @@ public class Question {
             return mQuestionObject;
         }
     }
+
+    @Retention(SOURCE)
+    @IntDef({QUESTION_OPTION_1, QUESTION_OPTION_2, QUESTION_OPTION_3, QUESTION_OPTION_4})
+    public @interface QuestionOption {}
+    public static final int QUESTION_OPTION_1 = 0;
+    public static final int QUESTION_OPTION_2 = 1;
+    public static final int QUESTION_OPTION_3 = 2;
+    public static final int QUESTION_OPTION_4 = 3;
 }

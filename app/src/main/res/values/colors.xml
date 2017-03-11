@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background">#8ECAAB</color>
+    <color name="radio_button">#a9dfc4</color>
     <color name="divider">#85BD9D</color>
 </resources>
