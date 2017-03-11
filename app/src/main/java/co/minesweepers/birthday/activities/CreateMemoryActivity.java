@@ -51,10 +51,15 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            mPerson.addVideo(data.getData());
-        } else if (requestCode == PICK_AUDIO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            mPerson.addAudio(data.getData());
+        if (resultCode == RESULT_OK && data != null) {
+            switch (requestCode) {
+                case PICK_VIDEO_REQUEST:
+                    mPerson.addVideo(data.getData());
+                    break;
+                case PICK_AUDIO_REQUEST:
+                    mPerson.addAudio(data.getData());
+                    break;
+            }
         }
     }
     
