@@ -20,11 +20,13 @@ public class Person {
     private static final String KEY_PERSON_ID = "id";
     private static final String KEY_PERSON_NAME = "name";
     private static final String KEY_VIDEO = "videoPath";
+    private static final String KEY_AUDIO = "audioPath";
     private static final String KEY_QUESTIONS = "questions";
 
     private final String mId;
     private String mName;
     private String videoPath;
+    private String audioPath;
     private List<Question> mQuestions;
 
     public Person() {
@@ -71,12 +73,32 @@ public class Person {
         });
     }
 
+    public void addAudio(Uri uri) {
+        DataUploaderService.uploadData(uri, new DataUploaderService.ResponseHandler() {
+            @Override
+            public void onSuccess(String objectPath) {
+                audioPath = objectPath;
+            }
+
+            @Override
+            public void onProgress(long totalBytes, long bytesSent) {
+                // show to UI
+            }
+
+            @Override
+            public void onFailure() {
+                // ignore for now
+            }
+        });
+    }
+
     JSONObject serialize() {
         JSONObject personObj = new JSONObject();
         try {
             personObj.put(KEY_PERSON_ID, mId);
             personObj.put(KEY_PERSON_NAME, mName);
             personObj.put(KEY_VIDEO, videoPath);
+            personObj.put(KEY_AUDIO, audioPath);
             JSONArray questions = new JSONArray();
             for (Question question : mQuestions) {
                 questions.put(question.serialize());
@@ -93,6 +115,7 @@ public class Person {
         Person person = new Person(personId);
         person.setName(jsonObject.getString(KEY_PERSON_NAME));
         person.videoPath = jsonObject.getString(KEY_VIDEO);
+        person.audioPath = jsonObject.getString(KEY_AUDIO);
         JSONArray questionsArray = jsonObject.getJSONArray(KEY_QUESTIONS);
         for (int i = 0; i < questionsArray.length(); i++) {
             JSONObject questionJson = questionsArray.getJSONObject(i);
