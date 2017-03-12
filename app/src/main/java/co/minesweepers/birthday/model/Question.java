@@ -28,6 +28,7 @@ public class Question {
     private String option1;
     private String option2;
     private String option3;
+
     private String option4;
     private @QuestionOption int correctOption;
     private String audioUri;
@@ -130,6 +131,10 @@ public class Question {
 
         public Builder() {
             mQuestionObject = new Question();
+        }
+
+        public Builder(Question question) {
+            mQuestionObject = question;
         }
 
         public Builder setQuestion(@NonNull String question) {

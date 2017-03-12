@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.minesweepers.birthday.R;
+import co.minesweepers.birthday.model.Person;
 import co.minesweepers.birthday.model.Question;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
@@ -32,12 +33,12 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int NEW_QUESTION_OFFSET = 1;
 
     private Listener mListener;
-    private List<Question> mQuestions;
+    private Person mPerson;
     private QuestionsViewHolder mCurrentQuestionHolder;
 
-    public CreateMemoryAdapter(@NonNull Listener listener) {
+    public CreateMemoryAdapter(@NonNull Person person, @NonNull Listener listener) {
         mListener = listener;
-        mQuestions = new ArrayList<>();
+        mPerson = person;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return VIEW_TYPE_ADD_QUESTION;
         }
 
-        int noOfQuestions = mQuestions.size();
+        int noOfQuestions = mPerson.getAllQuestions().size();
         if (position <= (HEADER_IMAGE_OFFSET + QUESTION_IMAGE_OFFSET  + NEW_QUESTION_OFFSET + noOfQuestions) - 1) {
             return VIEW_TYPE_QUESTION;
         }
@@ -115,18 +116,13 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return;
         }
 
-        Question question = mQuestions.get(position - (HEADER_IMAGE_OFFSET + QUESTION_IMAGE_OFFSET + NEW_QUESTION_OFFSET));
+        Question question = mPerson.getAllQuestions().get(position - (HEADER_IMAGE_OFFSET + QUESTION_IMAGE_OFFSET + NEW_QUESTION_OFFSET));
         questionsViewHolder.bind(question);
     }
 
     @Override
     public int getItemCount() {
-        return HEADER_IMAGE_OFFSET + QUESTION_IMAGE_OFFSET + NEW_QUESTION_OFFSET + mQuestions.size() + AUDIO_IMAGE_OFFSET + VIDEO_IMAGE_OFFSET;
-    }
-
-    private void addQuestion() {
-        mQuestions.add(0, mCurrentQuestionHolder.getQuestion());
-        notifyDataSetChanged();
+        return HEADER_IMAGE_OFFSET + QUESTION_IMAGE_OFFSET + NEW_QUESTION_OFFSET + mPerson.getAllQuestions().size() + AUDIO_IMAGE_OFFSET + VIDEO_IMAGE_OFFSET;
     }
 
     private class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -152,7 +148,7 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 case VIEW_TYPE_HEADER:
                     break;
                 case VIEW_TYPE_ADD_QUESTION:
-                    addQuestion();
+                    mListener.addQuestion(mCurrentQuestionHolder.getQuestion());
                     break;
                 case VIEW_TYPE_ADD_AUDIO:
                     mListener.addAudio();
@@ -164,7 +160,7 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    private class QuestionsViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
+    private class QuestionsViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener {
 
         private EditText mEditTextQuestion;
         private List<RadioButton> mRadioButtonsList;
@@ -175,6 +171,8 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(view);
 
             mEditTextQuestion = (EditText) view.findViewById(R.id.edit_text_question);
+            mEditTextQuestion.setOnFocusChangeListener(this);
+
             RadioButton radioButtonOption1 = (RadioButton) view.findViewById(R.id.radio_option1);
             RadioButton radioButtonOption2 = (RadioButton) view.findViewById(R.id.radio_option2);
             RadioButton radioButtonOption3 = (RadioButton) view.findViewById(R.id.radio_option3);
@@ -191,9 +189,13 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             radioButtonOption4.setOnCheckedChangeListener(this);
 
             EditText editTextOption1 = (EditText) view.findViewById(R.id.edit_text_option1);
+            editTextOption1.setOnFocusChangeListener(this);
             EditText editTextOption2 = (EditText) view.findViewById(R.id.edit_text_option2);
+            editTextOption2.setOnFocusChangeListener(this);
             EditText editTextOption3 = (EditText) view.findViewById(R.id.edit_text_option3);
+            editTextOption3.setOnFocusChangeListener(this);
             EditText editTextOption4 = (EditText) view.findViewById(R.id.edit_text_option4);
+            editTextOption4.setOnFocusChangeListener(this);
             mEditTextList = new ArrayList<>(4);
             mEditTextList.add(editTextOption1);
             mEditTextList.add(editTextOption2);
@@ -226,15 +228,15 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 return mQuestion;
             }
 
-            Question.Builder builder = new Question.Builder()
+            mQuestion = new Question.Builder()
                     .setQuestion(mEditTextQuestion.getText().toString())
                     .setOption1(mEditTextList.get(0).getText().toString())
                     .setOption2(mEditTextList.get(1).getText().toString())
                     .setOption3(mEditTextList.get(2).getText().toString())
                     .setOption4(mEditTextList.get(3).getText().toString())
-                    .setCorrectOption(getCorrectOption());
+                    .setCorrectOption(getCorrectOption())
+                    .question();
 
-            mQuestion = builder.question();
             return mQuestion;
         }
 
@@ -301,10 +303,45 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     radioButton.setChecked(false);
                 }
             }
+
+            if (mQuestion != null) {
+                new Question.Builder(mQuestion)
+                        .setCorrectOption(getCorrectOption());
+            }
+        }
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus || mQuestion == null) {
+                return;
+            }
+
+            Question.Builder builder = new Question.Builder(mQuestion);
+            switch (v.getId()) {
+                case R.id.edit_text_question:
+                    builder.setQuestion(mEditTextQuestion.getText().toString());
+                    break;
+                case R.id.edit_text_option1:
+                    builder.setOption1(mEditTextList.get(0).getText().toString());
+                    break;
+
+                case R.id.edit_text_option2:
+                    builder.setOption2(mEditTextList.get(1).getText().toString());
+                    break;
+
+                case R.id.edit_text_option3:
+                    builder.setOption3(mEditTextList.get(2).getText().toString());
+                    break;
+
+                case R.id.edit_text_option4:
+                    builder.setOption4(mEditTextList.get(3).getText().toString());
+                    break;
+            }
         }
     }
 
     public interface Listener {
+        void addQuestion(Question question);
         void addVideo();
         void addAudio();
         void save(List<Question> questions);

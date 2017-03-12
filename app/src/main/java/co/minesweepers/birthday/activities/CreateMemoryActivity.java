@@ -28,13 +28,13 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_memory);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.create_memory_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new CreateMemoryAdapter(this);
-        mRecyclerView.setAdapter(mAdapter);
-
         String personId = getIntent().getStringExtra(Constants.INTENT_EXTRA_KEY_PERSON_ID);
         mPerson = Memory.getInstance().getPerson(personId);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.create_memory_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new CreateMemoryAdapter(mPerson, this);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void showVideoFileChooser() {
@@ -65,7 +65,13 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
             }
         }
     }
-    
+
+    @Override
+    public void addQuestion(Question question) {
+        mPerson.pushQuestion(question);
+        mAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void addVideo() {
         showVideoFileChooser();
