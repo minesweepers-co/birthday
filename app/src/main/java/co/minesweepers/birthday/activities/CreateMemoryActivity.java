@@ -27,6 +27,9 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
     private static final int PICK_VIDEO_REQUEST = 1;
     private static final int CAPTURE_VIDEO_REQUEST = 2;
     private static final int PICK_AUDIO_REQUEST = 3;
+    private static final int VIDEO_QUALITY_HIGH = 1;
+    private static final String FILE_PREFIX = "test_fd_leak";
+    private static final String FILE_VIDEO_EXTENSION = ".mp4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,15 +74,15 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
         Intent intent = new Intent();
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.video_chooser_intent_title)), PICK_VIDEO_REQUEST);
     }
 
     private void dispatchTakeVideoIntent() {
-        File file = new File(getExternalFilesDir(null), "test_fd_leak" + String.valueOf(System.currentTimeMillis()) + ".mp4");
+        File file = new File(getExternalFilesDir(null), FILE_PREFIX + String.valueOf(System.currentTimeMillis()) + FILE_VIDEO_EXTENSION);
 
         Intent captureVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        captureVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(file));
-        captureVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        captureVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+        captureVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, VIDEO_QUALITY_HIGH);
         if (captureVideoIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(captureVideoIntent, CAPTURE_VIDEO_REQUEST);
         }
@@ -89,7 +92,7 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
         Intent intent = new Intent();
         intent.setType("audio/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Audio"), PICK_AUDIO_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.audio_chooser_intent_title)), PICK_AUDIO_REQUEST);
     }
 
     @Override
