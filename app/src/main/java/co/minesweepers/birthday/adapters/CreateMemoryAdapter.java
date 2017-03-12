@@ -7,10 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import java.lang.annotation.Retention;
 import java.util.ArrayList;
@@ -22,6 +22,8 @@ import co.minesweepers.birthday.model.Question;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final String TAG = "CreateMemoryAdapter";
 
     private static final int HEADER_IMAGE_OFFSET = 1;
     private static final int QUESTION_IMAGE_OFFSET = 1;
@@ -162,12 +164,12 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    private class QuestionsViewHolder extends RecyclerView.ViewHolder {
+    private class QuestionsViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
 
         private EditText mEditTextQuestion;
         private List<RadioButton> mRadioButtonsList;
+        private List<EditText> mEditTextList;
         private Question mQuestion;
-        private RadioGroup mRadioGroup;
 
         QuestionsViewHolder(View view) {
             super(view);
@@ -183,25 +185,40 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mRadioButtonsList.add(radioButtonOption3);
             mRadioButtonsList.add(radioButtonOption4);
 
-            mRadioGroup = (RadioGroup) view.findViewById(R.id.radio_group);
+            radioButtonOption1.setOnCheckedChangeListener(this);
+            radioButtonOption2.setOnCheckedChangeListener(this);
+            radioButtonOption3.setOnCheckedChangeListener(this);
+            radioButtonOption4.setOnCheckedChangeListener(this);
+
+            EditText editTextOption1 = (EditText) view.findViewById(R.id.edit_text_option1);
+            EditText editTextOption2 = (EditText) view.findViewById(R.id.edit_text_option2);
+            EditText editTextOption3 = (EditText) view.findViewById(R.id.edit_text_option3);
+            EditText editTextOption4 = (EditText) view.findViewById(R.id.edit_text_option4);
+            mEditTextList = new ArrayList<>(4);
+            mEditTextList.add(editTextOption1);
+            mEditTextList.add(editTextOption2);
+            mEditTextList.add(editTextOption3);
+            mEditTextList.add(editTextOption4);
         }
 
         void bind(Question question) {
             mQuestion = question;
             mEditTextQuestion.setText(question.getQuestion());
-            mRadioButtonsList.get(0).setText(question.getOption1());
-            mRadioButtonsList.get(1).setText(question.getOption2());
-            mRadioButtonsList.get(2).setText(question.getOption3());
-            mRadioButtonsList.get(3).setText(question.getOption4());
+            mEditTextList.get(0).setText(question.getOption1());
+            mEditTextList.get(1).setText(question.getOption2());
+            mEditTextList.get(2).setText(question.getOption3());
+            mEditTextList.get(3).setText(question.getOption4());
+            setCheckedRadioButton(question.getCorrectOption());
         }
 
         void clear() {
             mQuestion = null;
             mEditTextQuestion.setText(null);
-            mRadioButtonsList.get(0).setText(null);
-            mRadioButtonsList.get(1).setText(null);
-            mRadioButtonsList.get(2).setText(null);
-            mRadioButtonsList.get(3).setText(null);
+            mEditTextList.get(0).setText(null);
+            mEditTextList.get(1).setText(null);
+            mEditTextList.get(2).setText(null);
+            mEditTextList.get(3).setText(null);
+            setCheckedRadioButton(0);
         }
 
         Question getQuestion() {
@@ -211,10 +228,10 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             Question.Builder builder = new Question.Builder()
                     .setQuestion(mEditTextQuestion.getText().toString())
-                    .setOption1(mRadioButtonsList.get(0).getText().toString())
-                    .setOption2(mRadioButtonsList.get(1).getText().toString())
-                    .setOption3(mRadioButtonsList.get(2).getText().toString())
-                    .setOption4(mRadioButtonsList.get(3).getText().toString())
+                    .setOption1(mEditTextList.get(0).getText().toString())
+                    .setOption2(mEditTextList.get(1).getText().toString())
+                    .setOption3(mEditTextList.get(2).getText().toString())
+                    .setOption4(mEditTextList.get(3).getText().toString())
                     .setCorrectOption(getCorrectOption());
 
             mQuestion = builder.question();
@@ -222,7 +239,7 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         private @Question.QuestionOption int getCorrectOption() {
-            int radioButtonId = mRadioGroup.getCheckedRadioButtonId();
+            int radioButtonId = getCheckedRadioButtonId();
             switch (radioButtonId) {
                 case R.id.radio_option1:
                     return Question.QUESTION_OPTION_1;
@@ -234,6 +251,55 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     return Question.QUESTION_OPTION_4;
                 default:
                     throw new IllegalStateException("Invalid radio button id");
+            }
+        }
+
+        private int getCheckedRadioButtonId() {
+            for (RadioButton radioButton : mRadioButtonsList) {
+                if (radioButton.isChecked()) {
+                    return radioButton.getId();
+                }
+            }
+
+            return -1;
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            switch (buttonView.getId()) {
+                case R.id.radio_option1:
+                    if (isChecked) {
+                        setCheckedRadioButton(0);
+                    }
+                    break;
+                case R.id.radio_option2:
+                    if (isChecked) {
+                        setCheckedRadioButton(1);
+                    }
+                    break;
+                case R.id.radio_option3:
+                    if (isChecked) {
+                        setCheckedRadioButton(2);
+                    }
+                    break;
+                case R.id.radio_option4:
+                    if (isChecked) {
+                        setCheckedRadioButton(3);
+                    }
+                    break;
+                default:
+                    throw new IllegalStateException("Invalid radio button id");
+            }
+        }
+
+        private void setCheckedRadioButton(int checkedRadioButtonIndex) {
+            for (int i=0; i < mRadioButtonsList.size(); i++) {
+                RadioButton radioButton = mRadioButtonsList.get(i);
+                if (i == checkedRadioButtonIndex) {
+                    radioButton.setChecked(true);
+                } else {
+                    radioButton.setChecked(false);
+                }
             }
         }
     }
