@@ -8,7 +8,7 @@
     <string name="next">Next</string>
     <string name="enter_username">Enter Username</string>
     <string name="enter_password">Enter Password</string>
-    <string name="do_magic">Do Magic</string>
+    <string name="do_magic">Tap to generate MemoryLink</string>
     <string name="name">Name</string>
     <string name="done">Done</string>
     <string name="add_option">Add Option</string>
@@ -19,4 +19,5 @@
     <string name="video_upload_record_option">I\'ll record one!</string>
     <string name="video_chooser_intent_title">Select Video</string>
     <string name="audio_chooser_intent_title">Select Audio</string>
+    <string name="link_copied_toast_msg">Copied the link!</string>
 </resources>
