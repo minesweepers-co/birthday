@@ -46,6 +46,10 @@ public class Question {
         return correctOption;
     }
 
+    public Builder builder() {
+        return new Builder(this);
+    }
+
     private void addAudio(Uri uri) {
         DataUploaderService.uploadData(uri, new DataUploaderService.ResponseHandler() {
             @Override
@@ -107,7 +111,7 @@ public class Question {
             mQuestionObject = new Question();
         }
 
-        public Builder(Question question) {
+        private Builder(Question question) {
             mQuestionObject = question;
         }
 
