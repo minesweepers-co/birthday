@@ -14,4 +14,9 @@
     <string name="add_option">Add Option</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="video_upload_src_question">Where should we grab the video from?</string>
+    <string name="video_upload_from_gallery_option">Let me pick one</string>
+    <string name="video_upload_record_option">I\'ll record one!</string>
+    <string name="video_chooser_intent_title">Select Video</string>
+    <string name="audio_chooser_intent_title">Select Audio</string>
 </resources>
