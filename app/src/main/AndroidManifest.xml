@@ -20,7 +20,6 @@
         <activity android:name=".activities.AddPeopleActivity" />
         <activity android:name=".activities.ViewMemoryActivity" />
         <activity android:name=".activities.CreateMemoryActivity" />
-        <activity android:name=".activities.AddQuestionActivity" />
         <activity android:name=".activities.CreateCustomCredentialsActivity" />
     </application>
 

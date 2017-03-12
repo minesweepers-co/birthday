@@ -54,6 +54,14 @@ public class Person {
         mQuestions.add(question);
     }
 
+    public void pushQuestion(@NonNull Question question) {
+        mQuestions.add(0, question);
+    }
+
+    public @NonNull List<Question> getAllQuestions() {
+        return mQuestions;
+    }
+
     public void addVideo(Uri uri) {
         DataUploaderService.uploadData(uri, new DataUploaderService.ResponseHandler() {
             @Override

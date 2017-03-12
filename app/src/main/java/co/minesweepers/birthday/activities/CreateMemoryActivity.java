@@ -6,11 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.util.List;
+
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.adapters.CreateMemoryAdapter;
 import co.minesweepers.birthday.model.Memory;
 import co.minesweepers.birthday.model.Person;
+import co.minesweepers.birthday.model.Question;
 
 public class CreateMemoryActivity extends AppCompatActivity implements CreateMemoryAdapter.Listener {
 
@@ -25,13 +28,13 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_memory);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.create_memory_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new CreateMemoryAdapter(this);
-        mRecyclerView.setAdapter(mAdapter);
-
         String personId = getIntent().getStringExtra(Constants.INTENT_EXTRA_KEY_PERSON_ID);
         mPerson = Memory.getInstance().getPerson(personId);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.create_memory_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new CreateMemoryAdapter(mPerson, this);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void showVideoFileChooser() {
@@ -62,12 +65,11 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
             }
         }
     }
-    
+
     @Override
-    public void addQuestion() {
-        Intent addQuestionIntent = new Intent(this, AddQuestionActivity.class);
-        addQuestionIntent.putExtra(Constants.INTENT_EXTRA_KEY_PERSON_ID, mPerson.getId());
-        startActivity(addQuestionIntent);
+    public void addQuestion(Question question) {
+        mPerson.pushQuestion(question);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

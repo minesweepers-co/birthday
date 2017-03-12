@@ -2,16 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <EditText
         android:id="@+id/edit_text_person_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:maxLines="1"
         android:background="@android:color/transparent"
         android:layout_marginBottom="10dp"
+        android:layout_marginRight="36dp"
+        android:textCursorDrawable="@null"
         android:hint="@string/name" />
 
     <ImageView
