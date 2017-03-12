@@ -196,6 +196,7 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             editTextOption3.setOnFocusChangeListener(this);
             EditText editTextOption4 = (EditText) view.findViewById(R.id.edit_text_option4);
             editTextOption4.setOnFocusChangeListener(this);
+
             mEditTextList = new ArrayList<>(4);
             mEditTextList.add(editTextOption1);
             mEditTextList.add(editTextOption2);
@@ -206,20 +207,18 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void bind(Question question) {
             mQuestion = question;
             mEditTextQuestion.setText(question.getQuestion());
-            mEditTextList.get(0).setText(question.getOption1());
-            mEditTextList.get(1).setText(question.getOption2());
-            mEditTextList.get(2).setText(question.getOption3());
-            mEditTextList.get(3).setText(question.getOption4());
+            for (int i=0; i < mEditTextList.size(); i++) {
+                mEditTextList.get(i).setText(question.getOptions().get(i));
+            }
             setCheckedRadioButton(question.getCorrectOption());
         }
 
         void clear() {
             mQuestion = null;
             mEditTextQuestion.setText(null);
-            mEditTextList.get(0).setText(null);
-            mEditTextList.get(1).setText(null);
-            mEditTextList.get(2).setText(null);
-            mEditTextList.get(3).setText(null);
+            for (int i=0; i < mEditTextList.size(); i++) {
+                mEditTextList.get(i).setText(null);
+            }
             setCheckedRadioButton(0);
         }
 
@@ -228,15 +227,15 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 return mQuestion;
             }
 
-            mQuestion = new Question.Builder()
+            Question.Builder builder = new Question.Builder()
                     .setQuestion(mEditTextQuestion.getText().toString())
-                    .setOption1(mEditTextList.get(0).getText().toString())
-                    .setOption2(mEditTextList.get(1).getText().toString())
-                    .setOption3(mEditTextList.get(2).getText().toString())
-                    .setOption4(mEditTextList.get(3).getText().toString())
-                    .setCorrectOption(getCorrectOption())
-                    .question();
+                    .setCorrectOption(getCorrectOption());
 
+            for (int i=0; i < mEditTextList.size(); i++) {
+                builder.setOption(i, mEditTextList.get(i).getText().toString());
+            }
+
+            mQuestion = builder.question();
             return mQuestion;
         }
 
@@ -307,19 +306,19 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     builder.setQuestion(mEditTextQuestion.getText().toString());
                     break;
                 case R.id.edit_text_option1:
-                    builder.setOption1(mEditTextList.get(0).getText().toString());
+                    builder.setOption(0, mEditTextList.get(0).getText().toString());
                     break;
 
                 case R.id.edit_text_option2:
-                    builder.setOption2(mEditTextList.get(1).getText().toString());
+                    builder.setOption(1, mEditTextList.get(1).getText().toString());
                     break;
 
                 case R.id.edit_text_option3:
-                    builder.setOption3(mEditTextList.get(2).getText().toString());
+                    builder.setOption(2, mEditTextList.get(2).getText().toString());
                     break;
 
                 case R.id.edit_text_option4:
-                    builder.setOption4(mEditTextList.get(3).getText().toString());
+                    builder.setOption(3, mEditTextList.get(3).getText().toString());
                     break;
             }
         }
