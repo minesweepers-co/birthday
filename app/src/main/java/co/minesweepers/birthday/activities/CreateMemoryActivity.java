@@ -81,9 +81,4 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
     public void addAudio() {
         showAudioFileChooser();
     }
-
-    @Override
-    public void save(List<Question> questions) {
-
-    }
 }

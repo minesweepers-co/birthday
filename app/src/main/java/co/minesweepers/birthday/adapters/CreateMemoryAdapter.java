@@ -240,26 +240,11 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return mQuestion;
         }
 
-        private @Question.QuestionOption int getCorrectOption() {
-            int radioButtonId = getCheckedRadioButtonId();
-            switch (radioButtonId) {
-                case R.id.radio_option1:
-                    return Question.QUESTION_OPTION_1;
-                case R.id.radio_option2:
-                    return Question.QUESTION_OPTION_2;
-                case R.id.radio_option3:
-                    return Question.QUESTION_OPTION_3;
-                case R.id.radio_option4:
-                    return Question.QUESTION_OPTION_4;
-                default:
-                    throw new IllegalStateException("Invalid radio button id");
-            }
-        }
-
-        private int getCheckedRadioButtonId() {
-            for (RadioButton radioButton : mRadioButtonsList) {
+        private int getCorrectOption() {
+            for (int i=0; i < mRadioButtonsList.size(); i++) {
+                RadioButton radioButton = mRadioButtonsList.get(i);
                 if (radioButton.isChecked()) {
-                    return radioButton.getId();
+                    return i;
                 }
             }
 
@@ -344,7 +329,6 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void addQuestion(Question question);
         void addVideo();
         void addAudio();
-        void save(List<Question> questions);
     }
 
     @Retention(SOURCE)
