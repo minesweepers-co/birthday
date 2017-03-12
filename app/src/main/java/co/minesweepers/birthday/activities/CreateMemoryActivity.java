@@ -1,12 +1,16 @@
 package co.minesweepers.birthday.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import java.util.List;
+import java.io.File;
 
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
@@ -21,7 +25,8 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
     private RecyclerView mRecyclerView;
     private CreateMemoryAdapter mAdapter;
     private static final int PICK_VIDEO_REQUEST = 1;
-    private static final int PICK_AUDIO_REQUEST = 2;
+    private static final int CAPTURE_VIDEO_REQUEST = 2;
+    private static final int PICK_AUDIO_REQUEST = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +42,47 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    private void showVideoChoicesAlert() {
+        // TODO add style to dialog suitable for theme
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.video_upload_src_question);
+
+        builder.setPositiveButton(R.string.video_upload_record_option,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dispatchTakeVideoIntent();
+                    }
+                });
+
+        builder.setNegativeButton(R.string.video_upload_from_gallery_option,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showVideoFileChooser();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     private void showVideoFileChooser() {
         Intent intent = new Intent();
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO_REQUEST);
+    }
+
+    private void dispatchTakeVideoIntent() {
+        File file = new File(getExternalFilesDir(null), "test_fd_leak" + String.valueOf(System.currentTimeMillis()) + ".mp4");
+
+        Intent captureVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        captureVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(file));
+        captureVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        if (captureVideoIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(captureVideoIntent, CAPTURE_VIDEO_REQUEST);
+        }
     }
 
     private void showAudioFileChooser() {
@@ -57,6 +98,7 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
         if (resultCode == RESULT_OK && data != null) {
             switch (requestCode) {
                 case PICK_VIDEO_REQUEST:
+                case CAPTURE_VIDEO_REQUEST:
                     mPerson.addVideo(data.getData());
                     break;
                 case PICK_AUDIO_REQUEST:
@@ -74,7 +116,7 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
 
     @Override
     public void addVideo() {
-        showVideoFileChooser();
+        showVideoChoicesAlert();
     }
 
     @Override

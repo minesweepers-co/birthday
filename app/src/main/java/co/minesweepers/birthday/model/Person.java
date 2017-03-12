@@ -66,6 +66,7 @@ public class Person {
         DataUploaderService.uploadData(uri, new DataUploaderService.ResponseHandler() {
             @Override
             public void onSuccess(String objectPath) {
+                // TODO remove uri's file from disk if on temp storage ( Do not remove if from user's storage )
                 videoPath = objectPath;
             }
 
