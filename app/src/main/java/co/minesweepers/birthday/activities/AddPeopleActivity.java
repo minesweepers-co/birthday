@@ -1,42 +1,46 @@
 package co.minesweepers.birthday.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.adapters.AddPeopleAdapter;
+import co.minesweepers.birthday.adapters.helpers.ItemTouchHelperCallback;
 import co.minesweepers.birthday.model.Memory;
 import co.minesweepers.birthday.model.Person;
 
-public class AddPeopleActivity extends AppCompatActivity implements AddPeopleAdapter.Listener {
+public class AddPeopleActivity extends AppCompatActivity implements AddPeopleAdapter.Listener, View.OnClickListener {
 
     private RecyclerView mRecyclerView;
-    private Button mButtonNext;
+    private ImageButton mButtonGenerateCode;
+    private ImageButton mButtonReorderPeople;
     private AddPeopleAdapter mAdapter;
+    private ItemTouchHelper mTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_people);
         mRecyclerView = (RecyclerView) findViewById(R.id.add_person_recycler_view);
-        mButtonNext = (Button) findViewById(R.id.button_next);
-        mButtonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent createCustomCredentialsIntent = new Intent(AddPeopleActivity.this, CreateCustomCredentialsActivity.class);
-                startActivity(createCustomCredentialsIntent);
-            }
-        });
+        mButtonGenerateCode = (ImageButton) findViewById(R.id.button_next);
+        mButtonGenerateCode.setOnClickListener(this);
 
         mAdapter = new AddPeopleAdapter(Memory.getInstance().getAllPeople(), this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(mAdapter);
+        mTouchHelper = new ItemTouchHelper(callback);
+
+        mButtonReorderPeople = (ImageButton) findViewById(R.id.button_reorder);
+        mButtonReorderPeople.setOnClickListener(this);
     }
 
     @Override
@@ -50,5 +54,24 @@ public class AddPeopleActivity extends AppCompatActivity implements AddPeopleAda
         Intent addPersonIntent = new Intent(this, CreateMemoryActivity.class);
         addPersonIntent.putExtra(Constants.INTENT_EXTRA_KEY_PERSON_ID, person.getId());
         startActivity(addPersonIntent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_next:
+                Intent createCustomCredentialsIntent = new Intent(AddPeopleActivity.this, CreateCustomCredentialsActivity.class);
+                startActivity(createCustomCredentialsIntent);
+                break;
+            case R.id.button_reorder:
+                if (mAdapter.isInEditMode()) {
+                    mAdapter.setEditMode(false);
+                    mTouchHelper.attachToRecyclerView(null);
+                } else {
+                    mAdapter.setEditMode(true);
+                    mTouchHelper.attachToRecyclerView(mRecyclerView);
+                }
+                break;
+        }
     }
 }
