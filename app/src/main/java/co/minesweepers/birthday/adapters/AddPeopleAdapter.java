@@ -75,7 +75,7 @@ public class AddPeopleAdapter extends RecyclerView.Adapter<AddPeopleAdapter.View
     }
 
     @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
+    public void onItemMove(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(mPeople, i, i + 1);
@@ -86,7 +86,6 @@ public class AddPeopleAdapter extends RecyclerView.Adapter<AddPeopleAdapter.View
             }
         }
         notifyItemMoved(fromPosition, toPosition);
-        return true;
     }
 
     @Override
