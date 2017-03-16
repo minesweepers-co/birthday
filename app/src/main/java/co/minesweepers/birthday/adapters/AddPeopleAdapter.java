@@ -8,21 +8,26 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.util.Collections;
 import java.util.List;
 
 import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.Utils;
+import co.minesweepers.birthday.adapters.helpers.ItemTouchEventsListener;
 import co.minesweepers.birthday.model.Memory;
 import co.minesweepers.birthday.model.Person;
 
-public class AddPeopleAdapter extends RecyclerView.Adapter<AddPeopleAdapter.ViewHolder> {
+public class AddPeopleAdapter extends RecyclerView.Adapter<AddPeopleAdapter.ViewHolder> implements ItemTouchEventsListener {
 
     private List<Person> mPeople;
     private Listener mListener;
 
+    private boolean mIsEditMode;
+
     public AddPeopleAdapter(@NonNull List<Person> people, @NonNull Listener listener) {
         mPeople = people;
         mListener = listener;
+        mIsEditMode = false;
     }
 
     @Override
@@ -49,17 +54,58 @@ public class AddPeopleAdapter extends RecyclerView.Adapter<AddPeopleAdapter.View
 
     @Override
     public int getItemCount() {
+        if (mIsEditMode) {
+            return mPeople.size();
+        }
+
         return mPeople.size() + 1; // Always show one more than no. of people so user can add a new person
+    }
+
+    public void setEditMode(boolean isEditMode) {
+        mIsEditMode = isEditMode;
+        notifyDataSetChanged();
+        if (!mIsEditMode) {
+            // save the order in Memory instance
+            Memory.getInstance().setPeopleOrderFromList(mPeople);
+        }
+    }
+
+    public boolean isInEditMode() {
+        return mIsEditMode;
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(mPeople, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(mPeople, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        mPeople.remove(position);
+        notifyItemRemoved(position);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private EditText mEditTextName;
+        private ImageView mImageViewAddPerson;
+        private ImageView mImageViewReorderPerson;
 
         ViewHolder(View view) {
             super(view);
             mEditTextName = (EditText) view.findViewById(R.id.edit_text_person_name);
-            ImageView imageView = (ImageView) view.findViewById(R.id.imageview_add_person);
-            imageView.setOnClickListener(this);
+            mImageViewAddPerson = (ImageView) view.findViewById(R.id.imageview_add_person);
+            mImageViewAddPerson.setOnClickListener(this);
+
+            mImageViewReorderPerson = (ImageView) view.findViewById(R.id.imageview_reorder_person);
         }
 
         @Override
@@ -90,6 +136,17 @@ public class AddPeopleAdapter extends RecyclerView.Adapter<AddPeopleAdapter.View
         void setPerson(Person person) {
             mEditTextName.setText(person.getName());
             mEditTextName.setTag(person.getId());
+            if (mIsEditMode) {
+                mEditTextName.setFocusable(false);
+                mEditTextName.setClickable(false);
+                mImageViewAddPerson.setVisibility(View.GONE);
+                mImageViewReorderPerson.setVisibility(View.VISIBLE);
+            } else {
+                mEditTextName.setFocusable(true);
+                mEditTextName.setClickable(true);
+                mImageViewAddPerson.setVisibility(View.VISIBLE);
+                mImageViewReorderPerson.setVisibility(View.GONE);
+            }
         }
 
         void clearText() {

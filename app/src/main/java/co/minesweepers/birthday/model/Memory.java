@@ -29,15 +29,12 @@ public class Memory {
     private static final String KEY_PEOPLE = "people";
 
     private Memory() {
-        mId = UUID.randomUUID().toString();
-        // When creating a new memory the ordering will be decided by the user so we use
-        // a HashMap and define the order based on user preference
-        mPersons = new HashMap<>();
+        this(UUID.randomUUID().toString());
     }
 
     private Memory(String id) {
         mId = id;
-        // When creating a memory from JSON the ordering is important so we use a LinkedHashMap
+        // When creating a memory the ordering is important so we use a LinkedHashMap
         mPersons = new LinkedHashMap<>();
     }
 
@@ -63,6 +60,13 @@ public class Memory {
 
     public String getId() {
         return mId;
+    }
+
+    public void setPeopleOrderFromList(List<Person> people) {
+        mPersons.clear();
+        for (Person person : people) {
+            addPerson(person);
+        }
     }
 
     private JSONObject serialize() {
