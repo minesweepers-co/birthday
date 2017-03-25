@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.List;
 
+import co.minesweepers.birthday.Utils;
 import co.minesweepers.birthday.services.DataUploaderService;
 
 public class Question {
@@ -67,6 +68,21 @@ public class Question {
                 // ignore for now
             }
         });
+    }
+
+    public boolean isValid() {
+        if (Utils.isEmpty(question)) {
+            return false;
+        }
+
+        int numOfOptions = 0;
+        for (String option: options) {
+            if (!Utils.isEmpty(option)) {
+                numOfOptions++;
+            }
+        }
+
+        return numOfOptions >= 2; // at least 2 options should be set for question to be valid
     }
 
     JSONObject serialize() {

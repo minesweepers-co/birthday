@@ -41,6 +41,10 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         mPerson = person;
     }
 
+    public Question getCurrentQuestion() {
+        return mCurrentQuestionHolder.getQuestion();
+    }
+
     @Override
     public @ViewType int getItemViewType(int position) {
         if (position == HEADER_IMAGE_OFFSET - 1) {
@@ -281,7 +285,7 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
 
             if (mQuestion != null) {
-                mQuestion.builder().setCorrectOption(getCorrectOption());
+                mQuestion.builder().setCorrectOption(checkedRadioButtonIndex);
             }
         }
 
