@@ -152,7 +152,11 @@ public class CreateMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 case VIEW_TYPE_HEADER:
                     break;
                 case VIEW_TYPE_ADD_QUESTION:
-                    mListener.addQuestion(mCurrentQuestionHolder.getQuestion());
+                    Question question = mCurrentQuestionHolder.getQuestion();
+                    if (question.isValid()) {
+                        // TODO: highlight incomplete fields when question invalid
+                        mListener.addQuestion(mCurrentQuestionHolder.getQuestion());
+                    }
                     break;
                 case VIEW_TYPE_ADD_AUDIO:
                     mListener.addAudio();
