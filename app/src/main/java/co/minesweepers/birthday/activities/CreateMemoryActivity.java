@@ -45,6 +45,16 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    @Override
+    public void onBackPressed() {
+        Question question = mAdapter.getCurrentQuestion();
+        if (question.isValid()) {
+            mPerson.pushQuestion(question);
+        }
+
+        super.onBackPressed();
+    }
+
     private void showVideoChoicesAlert() {
         // TODO add style to dialog suitable for theme
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
