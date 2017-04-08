@@ -20,4 +20,6 @@
     <string name="video_chooser_intent_title">Select Video</string>
     <string name="audio_chooser_intent_title">Select Audio</string>
     <string name="link_copied_toast_msg">Copied the link!</string>
+    <string name="surprise_message">YOUR DEAR ONES HAVE A LITTLE SURPRISE FOR YOU</string>
+    <string name="ready">Ready?</string>
 </resources>
