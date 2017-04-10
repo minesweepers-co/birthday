@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(createMemoryIntent);
                 break;
             case R.id.button_view:
-                Intent viewMemoryIntent = new Intent(this, ViewMemoryActivity.class);
-                startActivity(viewMemoryIntent);
+                Intent welcomePersonIntent = new Intent(this, PersonWelcomeActivity.class);
+                startActivity(welcomePersonIntent);
                 break;
         }
     }
