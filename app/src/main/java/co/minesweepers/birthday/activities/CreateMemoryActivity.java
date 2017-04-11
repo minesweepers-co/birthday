@@ -1,14 +1,21 @@
 package co.minesweepers.birthday.activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.OperationCanceledException;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -18,8 +25,9 @@ import co.minesweepers.birthday.adapters.CreateMemoryAdapter;
 import co.minesweepers.birthday.model.Memory;
 import co.minesweepers.birthday.model.Person;
 import co.minesweepers.birthday.model.Question;
+import co.minesweepers.birthday.ui.AudioRecorderDialogFragment;
 
-public class CreateMemoryActivity extends AppCompatActivity implements CreateMemoryAdapter.Listener {
+public class CreateMemoryActivity extends AppCompatActivity implements CreateMemoryAdapter.Listener, AudioRecorderDialogFragment.AudioRecorderListener{
 
     private Person mPerson;
     private RecyclerView mRecyclerView;
@@ -30,6 +38,8 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
     private static final int VIDEO_QUALITY_HIGH = 1;
     private static final String FILE_PREFIX = "test_fd_leak";
     private static final String FILE_VIDEO_EXTENSION = ".mp4";
+
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +70,7 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.video_upload_src_question);
 
-        builder.setPositiveButton(R.string.video_upload_record_option,
+        builder.setPositiveButton(R.string.media_upload_record_option,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -68,11 +78,36 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
                     }
                 });
 
-        builder.setNegativeButton(R.string.video_upload_from_gallery_option,
+        builder.setNegativeButton(R.string.media_upload_from_gallery_option,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         showVideoFileChooser();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showAudioChoicesAlert() {
+        // TODO add style to dialog suitable for theme
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.audio_upload_src_question);
+
+        builder.setPositiveButton(R.string.media_upload_record_option,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showAudioRecorderDialog();
+                    }
+                });
+
+        builder.setNegativeButton(R.string.media_upload_from_gallery_option,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showAudioFileChooser();
                     }
                 });
 
@@ -85,6 +120,30 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, getString(R.string.video_chooser_intent_title)), PICK_VIDEO_REQUEST);
+    }
+
+    private void handleAudioRecordingPermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.RECORD_AUDIO)) {
+            //TODO  show some rationale , can be later since user explicitly clicked record
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    REQUEST_RECORD_AUDIO_PERMISSION);
+        }
+    }
+
+    private boolean canRecordAudio() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+    }
+    private void showAudioRecorderDialog() {
+        if(!canRecordAudio()) {
+            handleAudioRecordingPermissions();
+            return;
+        }
+        FragmentManager fm = getSupportFragmentManager();
+        AudioRecorderDialogFragment dialogFragment = AudioRecorderDialogFragment.newInstance(this);
+        dialogFragment.show(fm, "tag");
     }
 
     private void dispatchTakeVideoIntent() {
@@ -122,6 +181,19 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
     }
 
     @Override
+    public void onRequestPermissionsResult(final int requestCode, final String permissions[], final int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_RECORD_AUDIO_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    showAudioRecorderDialog();
+                } else {
+                    Toast.makeText(this, R.string.audio_record_permission_rejected_message, Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    @Override
     public void addQuestion(Question question) {
         mPerson.pushQuestion(question);
         mAdapter.notifyDataSetChanged();
@@ -134,6 +206,20 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
 
     @Override
     public void addAudio() {
-        showAudioFileChooser();
+        showAudioChoicesAlert();
+    }
+
+    @Override
+    public void onComplete(final Uri uri) {
+        mPerson.addAudio(uri);
+    }
+
+    @Override
+    public void onFailure(final Exception e) {
+        if(e instanceof OperationCanceledException) {
+            Toast.makeText(this, R.string.dismiss_without_recording, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.generic_retry_error, Toast.LENGTH_SHORT).show();
+        }
     }
 }
