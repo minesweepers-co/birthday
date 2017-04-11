@@ -74,19 +74,19 @@ public class AudioRecorderDialogFragment extends DialogFragment implements View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.audio_recorder_button:
-                AudioRecorderListener activity = (AudioRecorderListener) getActivity();
+                AudioRecorderListener listener = (AudioRecorderListener) getActivity();
                 if (mIsRecording) {
                     // already recording , stop recording and exit
                     mediaRecorder.stop();
                     dismiss();
-                    activity.onComplete(mAudioUri);
+                    listener.onComplete(mAudioUri);
                 } else {
                     // start recording
                     try {
                         mediaRecorder.prepare();
                     } catch (IOException e) {
                         Log.e(TAG, "Exception while preparing - " + e.getLocalizedMessage());
-                        activity.onFailure(e);
+                        listener.onFailure(e);
                     }
                     mediaRecorder.start();
                     mButton.setImageResource(R.drawable.stop_recording);
