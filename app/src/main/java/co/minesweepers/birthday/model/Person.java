@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import co.minesweepers.birthday.Utils;
 import co.minesweepers.birthday.services.DataUploaderService;
 
 public class Person {
@@ -62,12 +63,12 @@ public class Person {
         return mQuestions;
     }
 
-    public void addVideo(Uri uri) {
+    public void addVideo(final Uri uri) {
         DataUploaderService.uploadData(uri, new DataUploaderService.ResponseHandler() {
             @Override
             public void onSuccess(String objectPath) {
-                // TODO remove uri's file from disk if on temp storage ( Do not remove if from user's storage )
                 videoPath = objectPath;
+                Utils.cleanResource(uri);
             }
 
             @Override
@@ -82,11 +83,12 @@ public class Person {
         });
     }
 
-    public void addAudio(Uri uri) {
+    public void addAudio(final Uri uri) {
         DataUploaderService.uploadData(uri, new DataUploaderService.ResponseHandler() {
             @Override
             public void onSuccess(String objectPath) {
                 audioPath = objectPath;
+                Utils.cleanResource(uri);
             }
 
             @Override
