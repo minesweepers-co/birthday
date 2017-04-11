@@ -2,12 +2,14 @@ package co.minesweepers.birthday.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
@@ -18,10 +20,13 @@ public class PersonWelcomeActivity extends AppCompatActivity {
     private Button mButtonReady;
     private ImageView mImageViewPerson;
 
+    private static final String MEMORY_ID_QUERY_PARAM = "memoryId";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_welcome);
+        handleIntent();
 
         mTextViewSurpriseMessage =  (TextView) findViewById(R.id.surprise_message);
         Typeface customFont = Typeface.createFromAsset(getAssets(), Constants.AMATIC_FONT);
@@ -38,5 +43,18 @@ public class PersonWelcomeActivity extends AppCompatActivity {
                 startActivity(viewMemoryIntent);
             }
         });
+    }
+
+    private void handleIntent() {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if(action == null || action.isEmpty()) {
+            return;
+        }
+        if (action.equals(Intent.ACTION_VIEW)) {
+            Uri data = intent.getData();
+            String memoryId = data.getQueryParameter(MEMORY_ID_QUERY_PARAM);
+            Toast.makeText(this, "View memory for " + memoryId, Toast.LENGTH_LONG).show();
+        }
     }
 }
