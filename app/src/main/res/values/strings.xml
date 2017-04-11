@@ -15,11 +15,15 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="video_upload_src_question">Where should we grab the video from?</string>
-    <string name="video_upload_from_gallery_option">Let me pick one</string>
-    <string name="video_upload_record_option">I\'ll record one!</string>
+    <string name="audio_upload_src_question">Where should we grab the audio from?</string>
+    <string name="media_upload_from_gallery_option">Let me pick one</string>
+    <string name="media_upload_record_option">I\'ll record one!</string>
     <string name="video_chooser_intent_title">Select Video</string>
     <string name="audio_chooser_intent_title">Select Audio</string>
     <string name="link_copied_toast_msg">Copied the link!</string>
     <string name="surprise_message">YOUR DEAR ONES HAVE A LITTLE SURPRISE FOR YOU</string>
     <string name="ready">Ready?</string>
+    <string name="generic_retry_error">Oops! Something went wrong. Please try again</string>
+    <string name="dismiss_without_recording">Looks like you did not record anything.</string>
+    <string name="audio_record_permission_rejected_message">Without permission to record audio, you would be restricted to only being able to upload one :(</string>
 </resources>
