@@ -1,9 +1,11 @@
 package co.minesweepers.birthday.adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -23,6 +25,11 @@ public class ViewMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_QUESTION = 1;
 
     private Person mPerson;
+    private Listener mListener;
+
+    public ViewMemoryAdapter(@NonNull Listener listener) {
+        mListener = listener;
+    }
 
     @Override
     public int getItemViewType(int position) {
@@ -70,17 +77,34 @@ public class ViewMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
-    private class NameViewHolder extends RecyclerView.ViewHolder {
+    private class NameViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mName;
 
         NameViewHolder(View itemView) {
             super(itemView);
             mName = (TextView) itemView.findViewById(R.id.text_view_name);
+            ImageView imageViewPrevious = (ImageView) itemView.findViewById(R.id.image_view_previous);
+            imageViewPrevious.setOnClickListener(this);
+
+            ImageView imageViewNext = (ImageView) itemView.findViewById(R.id.image_view_next);
+            imageViewNext.setOnClickListener(this);
         }
 
         void bind(String name) {
             mName.setText(name);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.image_view_previous:
+                    mListener.onPreviousPersonClicked();
+                    break;
+                case R.id.image_view_next:
+                    mListener.onNextPersonClicked();
+                    break;
+            }
         }
     }
 
@@ -119,5 +143,10 @@ public class ViewMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
         }
+    }
+
+    public interface Listener {
+        void onNextPersonClicked();
+        void onPreviousPersonClicked();
     }
 }

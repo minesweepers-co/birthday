@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
         <ImageView
+            android:id="@+id/image_view_previous"
             android:src="@drawable/previous"
             android:layout_width="20dp"
             android:layout_height="wrap_content" />
@@ -24,6 +25,7 @@
             android:paddingRight="30dp"/>
 
         <ImageView
+            android:id="@+id/image_view_next"
             android:src="@drawable/next"
             android:layout_width="20dp"
             android:layout_height="wrap_content" />
