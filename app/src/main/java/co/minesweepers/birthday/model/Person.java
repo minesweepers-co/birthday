@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import co.minesweepers.birthday.Utils;
-import co.minesweepers.birthday.services.DataUploaderService;
+import co.minesweepers.birthday.services.FirebaseDBService;
 
 public class Person {
 
@@ -64,7 +64,7 @@ public class Person {
     }
 
     public void addVideo(final Uri uri) {
-        DataUploaderService.uploadData(uri, new DataUploaderService.ResponseHandler() {
+        FirebaseDBService.uploadData(uri, new FirebaseDBService.ResponseHandler() {
             @Override
             public void onSuccess(String objectPath) {
                 videoPath = objectPath;
@@ -84,7 +84,7 @@ public class Person {
     }
 
     public void addAudio(final Uri uri) {
-        DataUploaderService.uploadData(uri, new DataUploaderService.ResponseHandler() {
+        FirebaseDBService.uploadData(uri, new FirebaseDBService.ResponseHandler() {
             @Override
             public void onSuccess(String objectPath) {
                 audioPath = objectPath;

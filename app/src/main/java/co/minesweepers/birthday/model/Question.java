@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import co.minesweepers.birthday.Utils;
-import co.minesweepers.birthday.services.DataUploaderService;
+import co.minesweepers.birthday.services.FirebaseDBService;
 
 public class Question {
     private static final String TAG = "Question";
@@ -52,7 +52,7 @@ public class Question {
     }
 
     private void addAudio(Uri uri) {
-        DataUploaderService.uploadData(uri, new DataUploaderService.ResponseHandler() {
+        FirebaseDBService.uploadData(uri, new FirebaseDBService.ResponseHandler() {
             @Override
             public void onSuccess(String objectPath) {
                 audioUri = objectPath;
