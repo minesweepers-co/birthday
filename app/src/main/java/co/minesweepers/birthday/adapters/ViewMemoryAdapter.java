@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -108,25 +107,25 @@ public class ViewMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private class QuestionViewHolder extends RecyclerView.ViewHolder {
+    private class QuestionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private List<RadioButton> mRadioButtons;
-        private RadioGroup mRadioGroup;
         private TextView mTextViewQuestion;
-
         private Question mQuestion;
 
         QuestionViewHolder(View itemView) {
             super(itemView);
 
             mTextViewQuestion = (TextView) itemView.findViewById(R.id.text_view_question);
-            mRadioGroup = (RadioGroup) itemView.findViewById(R.id.radio_group);
             RadioButton radioButton1 = (RadioButton) itemView.findViewById(R.id.radio_option1);
             RadioButton radioButton2 = (RadioButton) itemView.findViewById(R.id.radio_option2);
             RadioButton radioButton3 = (RadioButton) itemView.findViewById(R.id.radio_option3);
             RadioButton radioButton4 = (RadioButton) itemView.findViewById(R.id.radio_option4);
 
             mRadioButtons = Arrays.asList(radioButton1, radioButton2, radioButton3, radioButton4);
+
+            ImageView imageViewDone = (ImageView) itemView.findViewById(R.id.image_view_done);
+            imageViewDone.setOnClickListener(this);
         }
 
         void bind(Question question) {
@@ -143,10 +142,23 @@ public class ViewMemoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
         }
+
+        @Override
+        public void onClick(View v) {
+            int correctOption = mQuestion.getCorrectOption();
+            if (!mRadioButtons.get(correctOption).isChecked()) {
+                for (RadioButton radioButton : mRadioButtons) {
+                    if (radioButton.isChecked()) {
+                        mListener.onIncorrectAnswer(radioButton);
+                    }
+                }
+            }
+        }
     }
 
     public interface Listener {
         void onNextPersonClicked();
         void onPreviousPersonClicked();
+        void onIncorrectAnswer(View view);
     }
 }
