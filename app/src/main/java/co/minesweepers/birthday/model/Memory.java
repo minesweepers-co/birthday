@@ -11,13 +11,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import co.minesweepers.birthday.services.DataUploaderService;
+import co.minesweepers.birthday.services.FirebaseDBService;
 
 public class Memory {
     private static final String TAG = "Memory";
@@ -103,7 +102,7 @@ public class Memory {
 
     public void upload() {
         final String json = serialize().toString();
-        DataUploaderService.uploadJson(json, new DatabaseReference.CompletionListener() {
+        FirebaseDBService.uploadJson(json, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError == null) {

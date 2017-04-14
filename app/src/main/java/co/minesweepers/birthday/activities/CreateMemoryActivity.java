@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import co.minesweepers.birthday.App;
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.adapters.CreateMemoryAdapter;
@@ -142,12 +143,12 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
             return;
         }
         FragmentManager fm = getSupportFragmentManager();
-        AudioRecorderDialogFragment dialogFragment = AudioRecorderDialogFragment.newInstance(this);
+        AudioRecorderDialogFragment dialogFragment = AudioRecorderDialogFragment.newInstance();
         dialogFragment.show(fm, "tag");
     }
 
     private void dispatchTakeVideoIntent() {
-        File file = new File(getExternalFilesDir(null), FILE_PREFIX + String.valueOf(System.currentTimeMillis()) + FILE_VIDEO_EXTENSION);
+        File file = new File(App.APP_STORAGE_DIRECTORY, FILE_PREFIX + String.valueOf(System.currentTimeMillis()) + FILE_VIDEO_EXTENSION);
 
         Intent captureVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         captureVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));

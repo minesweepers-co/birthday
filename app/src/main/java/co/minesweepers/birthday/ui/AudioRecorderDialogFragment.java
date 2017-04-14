@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import java.io.File;
 import java.io.IOException;
 
+import co.minesweepers.birthday.App;
 import co.minesweepers.birthday.R;
 
 public class AudioRecorderDialogFragment extends DialogFragment implements View.OnClickListener {
@@ -40,9 +41,9 @@ public class AudioRecorderDialogFragment extends DialogFragment implements View.
 
     }
 
-    public static AudioRecorderDialogFragment newInstance(Context context) {
+    public static AudioRecorderDialogFragment newInstance() {
         AudioRecorderDialogFragment frag = new AudioRecorderDialogFragment();
-        File file = new File(context.getExternalFilesDir(null), FILE_PREFIX + String.valueOf(System.currentTimeMillis()) + FILE_AUDIO_EXTENSION);
+        File file = new File(App.APP_STORAGE_DIRECTORY, FILE_PREFIX + String.valueOf(System.currentTimeMillis()) + FILE_AUDIO_EXTENSION);
 
         Bundle args = new Bundle();
         args.putParcelable(AUDIO_PATH, Uri.fromFile(file));
