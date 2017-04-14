@@ -3,4 +3,6 @@
     <color name="background">#8ECAAB</color>
     <color name="radio_button">#a9dfc4</color>
     <color name="divider">#85BD9D</color>
+    <color name="text">#3F845E</color>
+    <color name="white">#FFFFFF</color>
 </resources>

@@ -26,4 +26,5 @@
     <string name="generic_retry_error">Oops! Something went wrong. Please try again</string>
     <string name="dismiss_without_recording">Looks like you did not record anything.</string>
     <string name="audio_record_permission_rejected_message">Without permission to record audio, you would be restricted to only being able to upload one :(</string>
+    <string name="incorrect_option_selected">Umm, that doesn\'t seem right!\nGive it another try</string>
 </resources>

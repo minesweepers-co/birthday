@@ -125,8 +125,8 @@ public class Person {
         String personId = jsonObject.getString(KEY_PERSON_ID);
         Person person = new Person(personId);
         person.setName(jsonObject.getString(KEY_PERSON_NAME));
-        person.videoPath = jsonObject.getString(KEY_VIDEO);
-        person.audioPath = jsonObject.getString(KEY_AUDIO);
+        person.videoPath = jsonObject.optString(KEY_VIDEO);
+        person.audioPath = jsonObject.optString(KEY_AUDIO);
         JSONArray questionsArray = jsonObject.getJSONArray(KEY_QUESTIONS);
         for (int i = 0; i < questionsArray.length(); i++) {
             JSONObject questionJson = questionsArray.getJSONObject(i);
