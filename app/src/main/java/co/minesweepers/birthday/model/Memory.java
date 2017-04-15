@@ -89,15 +89,16 @@ public class Memory {
     public static @NonNull Memory fromJson(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
         String memoryId = jsonObject.getString(KEY_MEMORY_ID);
-        Memory memory = new Memory(memoryId);
+        sInstance = new Memory(memoryId);
+
         JSONArray peopleArray = jsonObject.getJSONArray(KEY_PEOPLE);
         for (int i = 0; i < peopleArray.length(); i++) {
             JSONObject personJson = peopleArray.getJSONObject(i);
             Person person = Person.fromJsonObject(personJson);
-            memory.addPerson(person);
+            sInstance.addPerson(person);
         }
-
-        return memory;
+        
+        return sInstance;
     }
 
     public void upload() {

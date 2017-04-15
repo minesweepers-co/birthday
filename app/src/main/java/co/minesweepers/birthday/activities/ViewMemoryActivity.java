@@ -89,7 +89,7 @@ public class ViewMemoryActivity extends AppCompatActivity implements ViewMemoryA
                         .anchor(view, Tooltip.Gravity.RIGHT)
                         .closePolicy(Tooltip.ClosePolicy.TOUCH_ANYWHERE_NO_CONSUME, 3000)
                         .activateDelay(800)
-                        .showDelay(300)
+                        .showDelay(100)
                         .withStyleId(R.style.ToolTipLayoutCustomStyle)
                         .text(getResources().getString(R.string.incorrect_option_selected))
                         .maxWidth(600)

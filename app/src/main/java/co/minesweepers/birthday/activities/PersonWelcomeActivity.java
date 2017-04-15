@@ -13,14 +13,15 @@ import android.widget.Toast;
 
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
+import co.minesweepers.birthday.Utils;
+import co.minesweepers.birthday.model.Memory;
+import co.minesweepers.birthday.services.FirebaseDBService;
 
 public class PersonWelcomeActivity extends AppCompatActivity {
 
     private TextView mTextViewSurpriseMessage;
     private Button mButtonReady;
     private ImageView mImageViewPerson;
-
-    private static final String MEMORY_ID_QUERY_PARAM = "memoryId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +49,25 @@ public class PersonWelcomeActivity extends AppCompatActivity {
     private void handleIntent() {
         Intent intent = getIntent();
         String action = intent.getAction();
-        if(action == null || action.isEmpty()) {
+        if(Utils.isEmpty(action)) {
             return;
         }
+
         if (action.equals(Intent.ACTION_VIEW)) {
             Uri data = intent.getData();
-            String memoryId = data.getQueryParameter(MEMORY_ID_QUERY_PARAM);
-            Toast.makeText(this, "View memory for " + memoryId, Toast.LENGTH_LONG).show();
+            final String memoryId = data.getQueryParameter(Constants.MEMORY_ID_QUERY_PARAM);
+            //TODO: Show spinner till memory is fetched
+            FirebaseDBService.getMemoryForId(memoryId, new FirebaseDBService.MemoryDownloadListener() {
+                @Override
+                public void onSuccess(Memory memory) {
+                    Toast.makeText(PersonWelcomeActivity.this, "Memory " + memory.getId() + " fetched", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onFailure() {
+                    Toast.makeText(PersonWelcomeActivity.this, "Fetching memory failed", Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 }
