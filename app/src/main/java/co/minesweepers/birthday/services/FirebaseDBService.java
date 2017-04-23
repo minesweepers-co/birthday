@@ -3,16 +3,22 @@ package co.minesweepers.birthday.services;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.util.UUID;
@@ -48,6 +54,11 @@ public class FirebaseDBService {
         void onFailure();
     }
 
+    public interface MemoryDownloadListener {
+        void onSuccess(Memory memory);
+
+        void onFailure();
+    }
 
     public static void uploadData(@NonNull final Uri uri, @NonNull final ResponseHandler handler) {
 
@@ -124,6 +135,28 @@ public class FirebaseDBService {
                 });
     }
 
+    public static void getMemoryForId(@NonNull final String memoryId, @NonNull final MemoryDownloadListener listener) {
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    String json = (String) dataSnapshot.getValue();
+                    Memory memory = Memory.fromJson(json);
+                    listener.onSuccess(memory);
+                } catch (JSONException e) {
+                    listener.onFailure();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onFailure();
+            }
+        };
+
+        DatabaseReference mMemoryReference = FirebaseDatabase.getInstance().getReference().child(FIREBASE_MEMORIES_DIRECTORY).child(memoryId);
+        mMemoryReference.addListenerForSingleValueEvent(eventListener);
+    }
 
     public static void uploadJson(@NonNull final String json, @Nullable final DatabaseReference.CompletionListener listener) {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();

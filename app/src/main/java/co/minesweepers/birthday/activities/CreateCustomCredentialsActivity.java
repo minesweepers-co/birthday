@@ -6,18 +6,22 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.model.Memory;
 
 public class CreateCustomCredentialsActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "CustomCredsActivity";
     private Button mButtonGenerateLink;
-    private static final String HOSTNAME = "https://www.minesweepers.co";
-    private static final String MEMORY_PATH = "/memory";
+    private static final String HTTPS = "https";
+    private static final String HOSTNAME = "www.minesweepers.co";
+    private static final String MEMORY_PATH = "memory";
     private static final String URI_LABEL = "URI";
 
     @Override
@@ -36,7 +40,13 @@ public class CreateCustomCredentialsActivity extends AppCompatActivity implement
                 Memory.getInstance().upload();
                 ClipboardManager clipboard = (ClipboardManager)
                         getSystemService(Context.CLIPBOARD_SERVICE);
-                Uri copyUri = Uri.parse(HOSTNAME + MEMORY_PATH + "/" + Memory.getInstance().getId());
+                Uri copyUri = new Uri.Builder()
+                        .scheme(HTTPS)
+                        .authority(HOSTNAME)
+                        .appendEncodedPath(MEMORY_PATH)
+                        .appendQueryParameter(Constants.MEMORY_ID_QUERY_PARAM, Memory.getInstance().getId())
+                        .build();
+                Log.d(TAG, "Deeplink uri = " + copyUri.toString());
                 ClipData clip = ClipData.newUri(getContentResolver(), URI_LABEL, copyUri);
                 clipboard.setPrimaryClip(clip);
                 Toast.makeText(this, R.string.link_copied_toast_msg, Toast.LENGTH_LONG).show();
