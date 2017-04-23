@@ -9,6 +9,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.adapters.AddPeopleAdapter;
@@ -23,6 +25,8 @@ public class AddPeopleActivity extends AppCompatActivity implements AddPeopleAda
     private ImageButton mButtonReorderPeople;
     private AddPeopleAdapter mAdapter;
     private ItemTouchHelper mTouchHelper;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,11 @@ public class AddPeopleActivity extends AppCompatActivity implements AddPeopleAda
 
         mButtonReorderPeople = (ImageButton) findViewById(R.id.button_reorder);
         mButtonReorderPeople.setOnClickListener(this);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, this.getLocalClassName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     @Override
