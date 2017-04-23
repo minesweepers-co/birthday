@@ -26,4 +26,9 @@ public class Utils {
             Log.e(TAG, "delete failed for -" + uri.getPath());
         }
     }
+
+    public interface GenericOperationListener {
+        public void onSuccess();
+        public void onFailure();
+    }
 }

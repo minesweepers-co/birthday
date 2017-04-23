@@ -1,5 +1,6 @@
 package co.minesweepers.birthday.model;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -17,15 +18,18 @@ import java.util.Map;
 import java.util.UUID;
 
 import co.minesweepers.birthday.services.FirebaseDBService;
+import co.minesweepers.birthday.Utils;
 
 public class Memory {
     private static final String TAG = "Memory";
     private final String mId;
     private static Memory sInstance;
     private Map<String, Person> mPersons;
+    private Recipient recipient;
 
     private static final String KEY_MEMORY_ID = "id";
     private static final String KEY_PEOPLE = "people";
+    private static final String KEY_RECIPIENT = "recipient";
 
     private Memory() {
         this(UUID.randomUUID().toString());
@@ -61,6 +65,27 @@ public class Memory {
         return mId;
     }
 
+    public void setRecipient(final String name, Uri imageUri, final Utils.GenericOperationListener listener) {
+        FirebaseDBService.uploadData(imageUri, new FirebaseDBService.ResponseHandler() {
+            @Override
+            public void onSuccess(String objectPath) {
+                recipient = new Recipient(name, objectPath);
+                listener.onSuccess();
+            }
+
+            @Override
+            public void onProgress(long totalBytes, long bytesSent) {
+                // ignore
+            }
+
+            @Override
+            public void onFailure() {
+                listener.onFailure();
+            }
+        });
+    }
+
+
     public void setPeopleOrderFromList(List<Person> people) {
         mPersons.clear();
         for (Person person : people) {
@@ -79,6 +104,9 @@ public class Memory {
                 personArray.put(person.serialize());
             }
             jsonObject.put(KEY_PEOPLE, personArray);
+            if(recipient!=null) {
+                jsonObject.put(KEY_RECIPIENT, recipient.serialize());
+            }
         } catch (JSONException e) {
             Log.e(TAG, "JSON ERROR: " + e.getLocalizedMessage());
         }
@@ -97,7 +125,8 @@ public class Memory {
             Person person = Person.fromJsonObject(personJson);
             sInstance.addPerson(person);
         }
-        
+
+        sInstance.recipient = Recipient.fromJson(jsonObject.getJSONObject(KEY_RECIPIENT));
         return sInstance;
     }
 

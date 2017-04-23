@@ -10,17 +10,14 @@ import co.minesweepers.birthday.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ImageView mTextViewCreate;
-    private ImageView mTextViewView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextViewCreate = (ImageView) findViewById(R.id.button_create);
+        ImageView mTextViewCreate = (ImageView) findViewById(R.id.button_create);
         mTextViewCreate.setOnClickListener(this);
-        mTextViewView = (ImageView) findViewById(R.id.button_view);
+        ImageView mTextViewView = (ImageView) findViewById(R.id.button_view);
         mTextViewView.setOnClickListener(this);
     }
 
@@ -29,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = v.getId();
         switch (id) {
             case R.id.button_create:
-                Intent createMemoryIntent = new Intent(this, AddPeopleActivity.class);
+                Intent createMemoryIntent = new Intent(this, GetRecipientActivity.class);
                 startActivity(createMemoryIntent);
                 break;
             case R.id.button_view:
