@@ -65,7 +65,7 @@ public class Memory {
         return mId;
     }
 
-    public void setRecipient(final String name, Uri imageUri, final Utils.GenericOperationListener listener) {
+    public void setRecipient(final String name, Uri imageUri, @NonNull final Utils.GenericOperationListener listener) {
         FirebaseDBService.uploadData(imageUri, new FirebaseDBService.ResponseHandler() {
             @Override
             public void onSuccess(String objectPath) {
