@@ -9,4 +9,6 @@ public class Constants {
     public static final String EVENT_ID_APP_LAUNCH = "app_launch";
     public static final String EVENT_ID_CREATE_MEMORY = "create_memory";
     public static final String EVENT_ID_VIEW_MEMORY = "view_memory";
+
+    public static final String EVENT_ID_FINISH_CREATING_MEMORY = "create_memory_done";
 }
