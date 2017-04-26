@@ -11,4 +11,5 @@ public class Constants {
     public static final String EVENT_ID_VIEW_MEMORY = "view_memory";
 
     public static final String EVENT_ID_FINISH_CREATING_MEMORY = "create_memory_done";
+    public static final String EVENT_ID_LAUNCH_APP_VIA_DEEPLINK = "launch_via_deeplink";
 }
