@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.Utils;
@@ -22,6 +24,7 @@ public class PersonWelcomeActivity extends AppCompatActivity {
     private TextView mTextViewSurpriseMessage;
     private Button mButtonReady;
     private ImageView mImageViewPerson;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class PersonWelcomeActivity extends AppCompatActivity {
                 startActivity(viewMemoryIntent);
             }
         });
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     private void handleIntent() {
@@ -56,6 +60,9 @@ public class PersonWelcomeActivity extends AppCompatActivity {
         if (action.equals(Intent.ACTION_VIEW)) {
             Uri data = intent.getData();
             final String memoryId = data.getQueryParameter(Constants.MEMORY_ID_QUERY_PARAM);
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Constants.EVENT_ID_LAUNCH_APP_VIA_DEEPLINK);
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, bundle);
             //TODO: Show spinner till memory is fetched
             FirebaseDBService.getMemoryForId(memoryId, new FirebaseDBService.MemoryDownloadListener() {
                 @Override

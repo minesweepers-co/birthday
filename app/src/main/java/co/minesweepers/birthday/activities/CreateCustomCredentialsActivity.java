@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.model.Memory;
@@ -23,6 +25,7 @@ public class CreateCustomCredentialsActivity extends AppCompatActivity implement
     private static final String HOSTNAME = "www.minesweepers.co";
     private static final String MEMORY_PATH = "memory";
     private static final String URI_LABEL = "URI";
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,7 @@ public class CreateCustomCredentialsActivity extends AppCompatActivity implement
         setContentView(R.layout.activity_create_custom_credentials);
         mButtonGenerateLink = (Button) findViewById(R.id.button_generate_link);
         mButtonGenerateLink.setOnClickListener(this);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override
@@ -50,6 +54,10 @@ public class CreateCustomCredentialsActivity extends AppCompatActivity implement
                 ClipData clip = ClipData.newUri(getContentResolver(), URI_LABEL, copyUri);
                 clipboard.setPrimaryClip(clip);
                 Toast.makeText(this, R.string.link_copied_toast_msg, Toast.LENGTH_LONG).show();
+
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Constants.EVENT_ID_FINISH_CREATING_MEMORY);
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 break;
         }
     }
