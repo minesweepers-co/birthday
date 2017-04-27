@@ -19,11 +19,13 @@
     <string name="media_upload_from_gallery_option">Let me pick one</string>
     <string name="media_upload_record_option">I\'ll record one!</string>
     <string name="video_chooser_intent_title">Select Video</string>
+    <string name="image_chooser_intent_title">Select Picture</string>
     <string name="audio_chooser_intent_title">Select Audio</string>
     <string name="link_copied_toast_msg">Copied the link!</string>
     <string name="surprise_message">YOUR DEAR ONES HAVE A LITTLE SURPRISE FOR YOU</string>
     <string name="ready">Ready?</string>
     <string name="generic_retry_error">Oops! Something went wrong. Please try again</string>
+    <string name="recipient_name_empty"> Oops! Recipient name cannot be empty</string>
     <string name="dismiss_without_recording">Looks like you did not record anything.</string>
     <string name="audio_record_permission_rejected_message">Without permission to record audio, you would be restricted to only being able to upload one :(</string>
     <string name="incorrect_option_selected">Umm, that doesn\'t seem right!\nGive it another try</string>

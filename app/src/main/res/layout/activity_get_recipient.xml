@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/background"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="Who are we wishing ?"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recipient_name_info"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        android:textSize="24sp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp">
+
+        <EditText
+            android:id="@+id/recipient_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@null"
+            android:hint="enter name here . . ."
+            android:gravity="center_vertical|center"
+            android:layout_marginTop="20dp">
+
+        </EditText>
+        <ImageView
+            android:id="@+id/recipient_name_continue"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignBottom="@+id/recipient_name"
+            android:layout_alignRight="@+id/recipient_name"
+            android:src="@drawable/play"
+            android:layout_alignEnd="@+id/recipient_name"
+            android:paddingEnd="20dp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:text="Lets pick a picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/get_recipient_upload_pic_info"
+        android:gravity="center"
+        android:layout_marginTop="30dp"
+        android:textSize="18sp"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="88dp"
+        android:layout_height="83dp"
+        app:srcCompat="@drawable/upload"
+        android:id="@+id/get_recipient_upload_pic"
+        android:gravity="center"
+        android:scaleX="1"
+        android:scaleY="1"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/button_recipient_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/rounded_button_corner"
+        android:textAllCaps="false"
+        android:text="@string/ready"
+        android:gravity="center_horizontal|center"
+        android:layout_gravity="center" />
+
+
+</LinearLayout>

@@ -13,18 +13,14 @@ import co.minesweepers.birthday.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ImageView mTextViewCreate;
-    private ImageView mTextViewView;
-    private FirebaseAnalytics mFirebaseAnalytics;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        mTextViewCreate = (ImageView) findViewById(R.id.button_create);
+        ImageView mTextViewCreate = (ImageView) findViewById(R.id.button_create);
         mTextViewCreate.setOnClickListener(this);
-        mTextViewView = (ImageView) findViewById(R.id.button_view);
+        ImageView mTextViewView = (ImageView) findViewById(R.id.button_view);
         mTextViewView.setOnClickListener(this);
 
         Bundle bundle = new Bundle();
