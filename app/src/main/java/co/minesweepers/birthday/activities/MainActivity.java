@@ -13,6 +13,8 @@ import co.minesweepers.birthday.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
