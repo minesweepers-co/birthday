@@ -49,6 +49,10 @@ public class Memory {
         return sInstance;
     }
 
+    public static void reset() {
+        sInstance = null;
+    }
+
     public void addPerson(@NonNull Person person) {
         mPersons.put(person.getId(), person);
     }
@@ -93,7 +97,7 @@ public class Memory {
         }
     }
 
-    private JSONObject serialize() {
+    public JSONObject serialize() {
         JSONObject jsonObject = new JSONObject();
 
         try {
