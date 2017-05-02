@@ -49,10 +49,6 @@ public class Memory {
         return sInstance;
     }
 
-    public static void reset() {
-        sInstance = null;
-    }
-
     public void addPerson(@NonNull Person person) {
         mPersons.put(person.getId(), person);
     }
@@ -119,6 +115,11 @@ public class Memory {
     }
 
     public static @NonNull Memory fromJson(String jsonString) throws JSONException {
+        if (Utils.isEmpty(jsonString)) {
+            sInstance = null;
+            return getInstance();
+        }
+
         JSONObject jsonObject = new JSONObject(jsonString);
         String memoryId = jsonObject.getString(KEY_MEMORY_ID);
         sInstance = new Memory(memoryId);

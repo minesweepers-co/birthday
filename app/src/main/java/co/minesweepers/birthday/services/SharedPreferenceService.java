@@ -25,10 +25,6 @@ public class SharedPreferenceService {
     public static void restore(Context context, boolean isCreateMode) throws JSONException {
         SharedPreferences sharedPreferences = context.getSharedPreferences(getSharedPreferenceName(isCreateMode), Context.MODE_PRIVATE);
         String savedJson = sharedPreferences.getString(SHARED_PREFERENCE_KEY_MEMORY, null);
-        if (Utils.isEmpty(savedJson)) {
-            return;
-        }
-
         Memory.fromJson(savedJson);
     }
 

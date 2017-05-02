@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void restore(boolean isCreateMode) {
         try {
-            Memory.reset();
             SharedPreferenceService.restore(getApplicationContext(), isCreateMode);
         } catch (JSONException e) {
             Log.e(TAG, "Memory stored on device is corrupted");
