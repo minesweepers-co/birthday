@@ -9,24 +9,24 @@ import android.widget.ImageView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import co.minesweepers.birthday.Constants;
-
 import org.json.JSONException;
 
+import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.model.Memory;
 import co.minesweepers.birthday.services.SharedPreferenceService;
 
+import static co.minesweepers.birthday.Utils.logEvent;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
-    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         ImageView mTextViewCreate = (ImageView) findViewById(R.id.button_create);
         mTextViewCreate.setOnClickListener(this);
         ImageView mTextViewView = (ImageView) findViewById(R.id.button_view);
@@ -61,11 +61,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (JSONException e) {
             Log.e(TAG, "Memory stored on device is corrupted");
         }
-    }
-
-    private void logEvent(String event, String eventId) {
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, eventId);
-        mFirebaseAnalytics.logEvent(event, bundle);
     }
 }
