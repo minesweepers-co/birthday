@@ -104,9 +104,7 @@ public class Memory {
                 personArray.put(person.serialize());
             }
             jsonObject.put(KEY_PEOPLE, personArray);
-            if(recipient!=null) {
-                jsonObject.put(KEY_RECIPIENT, recipient.serialize());
-            }
+            jsonObject.put(KEY_RECIPIENT, recipient.serialize());
         } catch (JSONException e) {
             Log.e(TAG, "JSON ERROR: " + e.getLocalizedMessage());
         }
