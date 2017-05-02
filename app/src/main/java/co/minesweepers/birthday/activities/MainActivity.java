@@ -13,7 +13,6 @@ import org.json.JSONException;
 
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
-import co.minesweepers.birthday.model.Memory;
 import co.minesweepers.birthday.services.SharedPreferenceService;
 
 import static co.minesweepers.birthday.Utils.logEvent;
@@ -42,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.button_create:
                 logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Constants.EVENT_ID_CREATE_MEMORY);
                 restore(true);
-                Intent createMemoryIntent = new Intent(this, GetRecipientActivity.class);
-                startActivity(createMemoryIntent);
+                Intent getRecipientActivity = new Intent(this, GetRecipientActivity.class);
+                startActivity(getRecipientActivity);
                 break;
             case R.id.button_view:
                 logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Constants.EVENT_ID_VIEW_MEMORY);
