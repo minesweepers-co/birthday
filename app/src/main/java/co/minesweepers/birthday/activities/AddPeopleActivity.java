@@ -18,6 +18,8 @@ import co.minesweepers.birthday.adapters.helpers.ItemTouchHelperCallback;
 import co.minesweepers.birthday.model.Memory;
 import co.minesweepers.birthday.model.Person;
 
+import static co.minesweepers.birthday.Utils.logEvent;
+
 public class AddPeopleActivity extends AppCompatActivity implements AddPeopleAdapter.Listener, View.OnClickListener {
 
     private RecyclerView mRecyclerView;
@@ -25,7 +27,6 @@ public class AddPeopleActivity extends AppCompatActivity implements AddPeopleAda
     private ImageButton mButtonReorderPeople;
     private AddPeopleAdapter mAdapter;
     private ItemTouchHelper mTouchHelper;
-    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     @Override
@@ -45,11 +46,8 @@ public class AddPeopleActivity extends AppCompatActivity implements AddPeopleAda
 
         mButtonReorderPeople = (ImageButton) findViewById(R.id.button_reorder);
         mButtonReorderPeople.setOnClickListener(this);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, this.getLocalClassName());
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, this.getLocalClassName());
     }
 
     @Override

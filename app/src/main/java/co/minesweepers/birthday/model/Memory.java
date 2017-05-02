@@ -93,7 +93,7 @@ public class Memory {
         }
     }
 
-    private JSONObject serialize() {
+    public JSONObject serialize() {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -104,9 +104,7 @@ public class Memory {
                 personArray.put(person.serialize());
             }
             jsonObject.put(KEY_PEOPLE, personArray);
-            if(recipient!=null) {
-                jsonObject.put(KEY_RECIPIENT, recipient.serialize());
-            }
+            jsonObject.put(KEY_RECIPIENT, recipient.serialize());
         } catch (JSONException e) {
             Log.e(TAG, "JSON ERROR: " + e.getLocalizedMessage());
         }
@@ -115,6 +113,11 @@ public class Memory {
     }
 
     public static @NonNull Memory fromJson(String jsonString) throws JSONException {
+        if (Utils.isEmpty(jsonString)) {
+            sInstance = null;
+            return getInstance();
+        }
+
         JSONObject jsonObject = new JSONObject(jsonString);
         String memoryId = jsonObject.getString(KEY_MEMORY_ID);
         sInstance = new Memory(memoryId);

@@ -3,31 +3,35 @@ package co.minesweepers.birthday.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import org.json.JSONException;
+
 import co.minesweepers.birthday.Constants;
 import co.minesweepers.birthday.R;
+import co.minesweepers.birthday.services.SharedPreferenceService;
+
+import static co.minesweepers.birthday.Utils.logEvent;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         ImageView mTextViewCreate = (ImageView) findViewById(R.id.button_create);
         mTextViewCreate.setOnClickListener(this);
         ImageView mTextViewView = (ImageView) findViewById(R.id.button_view);
         mTextViewView.setOnClickListener(this);
 
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Constants.EVENT_ID_APP_LAUNCH);
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, bundle);
+        logEvent(FirebaseAnalytics.Event.APP_OPEN, Constants.EVENT_ID_APP_LAUNCH);
     }
 
     @Override
@@ -35,19 +39,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = v.getId();
         switch (id) {
             case R.id.button_create:
-                Bundle bundle = new Bundle();
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Constants.EVENT_ID_CREATE_MEMORY);
-                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-                Intent createMemoryIntent = new Intent(this, GetRecipientActivity.class);
-                startActivity(createMemoryIntent);
+                logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Constants.EVENT_ID_CREATE_MEMORY);
+                restore(true);
+                Intent getRecipientActivity = new Intent(this, GetRecipientActivity.class);
+                startActivity(getRecipientActivity);
                 break;
             case R.id.button_view:
-                bundle = new Bundle();
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Constants.EVENT_ID_VIEW_MEMORY);
-                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+                logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Constants.EVENT_ID_VIEW_MEMORY);
+                restore(false);
                 Intent welcomePersonIntent = new Intent(this, PersonWelcomeActivity.class);
                 startActivity(welcomePersonIntent);
                 break;
+        }
+    }
+
+    private void restore(boolean isCreateMode) {
+        try {
+            SharedPreferenceService.restore(getApplicationContext(), isCreateMode);
+        } catch (JSONException e) {
+            Log.e(TAG, "Memory stored on device is corrupted");
         }
     }
 }

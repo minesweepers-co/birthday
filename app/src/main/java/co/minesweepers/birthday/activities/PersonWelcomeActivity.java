@@ -18,20 +18,23 @@ import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.Utils;
 import co.minesweepers.birthday.model.Memory;
 import co.minesweepers.birthday.services.FirebaseDBService;
+import co.minesweepers.birthday.services.SharedPreferenceService;
+
+import static co.minesweepers.birthday.Utils.logEvent;
 
 public class PersonWelcomeActivity extends AppCompatActivity {
 
+    private static final String TAG = "PersonWelcomeActivity";
     private TextView mTextViewSurpriseMessage;
     private Button mButtonReady;
     private ImageView mImageViewPerson;
-    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_welcome);
         handleIntent();
-
+        
         mTextViewSurpriseMessage =  (TextView) findViewById(R.id.surprise_message);
         Typeface customFont = Typeface.createFromAsset(getAssets(), Constants.AMATIC_FONT);
         mTextViewSurpriseMessage.setTypeface(customFont);
@@ -47,34 +50,31 @@ public class PersonWelcomeActivity extends AppCompatActivity {
                 startActivity(viewMemoryIntent);
             }
         });
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     private void handleIntent() {
         Intent intent = getIntent();
         String action = intent.getAction();
-        if(Utils.isEmpty(action)) {
+        if(Utils.isEmpty(action) || !action.equals(Intent.ACTION_VIEW)) {
             return;
         }
 
-        if (action.equals(Intent.ACTION_VIEW)) {
-            Uri data = intent.getData();
-            final String memoryId = data.getQueryParameter(Constants.MEMORY_ID_QUERY_PARAM);
-            Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Constants.EVENT_ID_LAUNCH_APP_VIA_DEEPLINK);
-            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, bundle);
-            //TODO: Show spinner till memory is fetched
-            FirebaseDBService.getMemoryForId(memoryId, new FirebaseDBService.MemoryDownloadListener() {
-                @Override
-                public void onSuccess(Memory memory) {
-                    Toast.makeText(PersonWelcomeActivity.this, "Memory " + memory.getId() + " fetched", Toast.LENGTH_LONG).show();
-                }
+        logEvent(FirebaseAnalytics.Event.APP_OPEN, Constants.EVENT_ID_LAUNCH_APP_VIA_DEEPLINK);
 
-                @Override
-                public void onFailure() {
-                    Toast.makeText(PersonWelcomeActivity.this, "Fetching memory failed", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
+        Uri data = intent.getData();
+        final String memoryId = data.getQueryParameter(Constants.MEMORY_ID_QUERY_PARAM);
+        //TODO: Show spinner till memory is fetched
+        FirebaseDBService.getMemoryForId(memoryId, new FirebaseDBService.MemoryDownloadListener() {
+            @Override
+            public void onSuccess(Memory memory) {
+                Toast.makeText(PersonWelcomeActivity.this, "Memory " + memory.getId() + " fetched", Toast.LENGTH_LONG).show();
+                SharedPreferenceService.save(getApplicationContext(), memory, false);
+            }
+
+            @Override
+            public void onFailure() {
+                Toast.makeText(PersonWelcomeActivity.this, "Fetching memory failed", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

@@ -26,6 +26,7 @@ import co.minesweepers.birthday.adapters.CreateMemoryAdapter;
 import co.minesweepers.birthday.model.Memory;
 import co.minesweepers.birthday.model.Person;
 import co.minesweepers.birthday.model.Question;
+import co.minesweepers.birthday.services.SharedPreferenceService;
 import co.minesweepers.birthday.ui.AudioRecorderDialogFragment;
 
 public class CreateMemoryActivity extends AppCompatActivity implements CreateMemoryAdapter.Listener, AudioRecorderDialogFragment.AudioRecorderListener{
@@ -197,6 +198,7 @@ public class CreateMemoryActivity extends AppCompatActivity implements CreateMem
     @Override
     public void addQuestion(Question question) {
         mPerson.pushQuestion(question);
+        SharedPreferenceService.save(getApplicationContext(), Memory.getInstance(), true);
         mAdapter.notifyDataSetChanged();
     }
 
