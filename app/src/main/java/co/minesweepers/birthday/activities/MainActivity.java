@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Constants.EVENT_ID_CREATE_MEMORY);
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-                Intent createMemoryIntent = new Intent(this, AddPeopleActivity.class);
+                Intent createMemoryIntent = new Intent(this, GetRecipientActivity.class);
                 startActivity(createMemoryIntent);
                 break;
             case R.id.button_view:
