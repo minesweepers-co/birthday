@@ -16,6 +16,7 @@ import android.widget.Toast;
 import co.minesweepers.birthday.R;
 import co.minesweepers.birthday.Utils;
 import co.minesweepers.birthday.model.Memory;
+import co.minesweepers.birthday.services.SharedPreferenceService;
 
 public class GetRecipientActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -100,6 +101,7 @@ public class GetRecipientActivity extends AppCompatActivity implements View.OnCl
                     mMemory.setRecipient(mNameTxt.getText().toString(), imageUri, new Utils.GenericOperationListener() {
                         @Override
                         public void onSuccess() {
+                            SharedPreferenceService.save(GetRecipientActivity.this, mMemory, true);
                             mUploadImageText.setVisibility(View.GONE);
                             mRecipientNameInfo.setVisibility(View.GONE);
                             mUploadImageView.setImageURI(imageUri);
